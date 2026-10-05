@@ -8,7 +8,10 @@ from agents.diagnosis_agent import diagnose_run
 from agents.repair_agent import generate_repair
 from agents.repair_applier import apply_repair
 from agents.repair_validator import validate_repair
-from agents.git_manager import create_repair_branch
+from agents.git_manager import (
+    create_repair_branch,
+    commit_changes
+)
 
 
 MAX_REPAIR_ATTEMPTS = 3
@@ -726,6 +729,27 @@ async def run_autonomous_repair(
 
         print(
             "Full test suite passed."
+        )
+
+        # --------------------------------------------------
+        # Commit validated repairs
+        # --------------------------------------------------
+
+        print(
+            "\n---------- COMMITTING REPAIRS ----------"
+        )
+
+        commit_message = (
+            f"fix: autonomous repair for CI run "
+            f"{diagnosis_result['run_id']}"
+        )
+
+        commit_output = commit_changes(
+            commit_message
+        )
+
+        print(
+            commit_output
         )
 
         overall_success = True
