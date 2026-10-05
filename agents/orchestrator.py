@@ -8,6 +8,7 @@ from agents.diagnosis_agent import diagnose_run
 from agents.repair_agent import generate_repair
 from agents.repair_applier import apply_repair
 from agents.repair_validator import validate_repair
+from agents.git_manager import create_repair_branch
 
 
 MAX_REPAIR_ATTEMPTS = 3
@@ -465,6 +466,25 @@ async def run_autonomous_repair(
     )
 
     # --------------------------------------------------
+    # STEP 2
+    # Create isolated repair branch
+    # --------------------------------------------------
+
+    print(
+        "\n========== STEP 2: CREATE REPAIR BRANCH =========="
+    )
+
+    repair_run_id = diagnosis_result["run_id"]
+
+    repair_branch = create_repair_branch(
+        repair_run_id
+    )
+
+    print(
+        f"Repair branch created: {repair_branch}"
+    )
+
+    # --------------------------------------------------
     # Retrieve implementation source
     # --------------------------------------------------
 
@@ -521,12 +541,12 @@ async def run_autonomous_repair(
         )
 
     # --------------------------------------------------
-    # STEP 2
+    # STEP 3
     # Apply every diagnosis
     # --------------------------------------------------
 
     print(
-        "\n========== STEP 2: MULTI-REPAIR =========="
+        "\n========== STEP 3: MULTI-REPAIR =========="
     )
 
     repair_results = []
@@ -613,7 +633,7 @@ async def run_autonomous_repair(
             break
 
     # --------------------------------------------------
-    # STEP 3
+    # STEP 4
     # Check whether all repairs were applied
     # --------------------------------------------------
 
@@ -652,6 +672,7 @@ async def run_autonomous_repair(
 
         return {
             "run_id": diagnosis_result["run_id"],
+            "repair_branch": repair_branch,
             "diagnoses": diagnoses,
             "repair_results": repair_results,
             "successful_repairs": successful_repairs,
@@ -662,12 +683,12 @@ async def run_autonomous_repair(
         }
 
     # --------------------------------------------------
-    # STEP 4
+    # STEP 5
     # Final full test suite
     # --------------------------------------------------
 
     print(
-        "\n========== STEP 3: FINAL VALIDATION =========="
+        "\n========== STEP 4: FINAL VALIDATION =========="
     )
 
     print(
@@ -679,9 +700,9 @@ async def run_autonomous_repair(
     )
 
     final_tests_passed, final_test_output = run_tests()
-    
+
     # --------------------------------------------------
-    # STEP 5
+    # STEP 6
     # Final result
     # --------------------------------------------------
 
@@ -748,6 +769,11 @@ async def run_autonomous_repair(
     )
 
     print(
+        f"Repair Branch: "
+        f"{repair_branch}"
+    )
+
+    print(
         f"Total Diagnoses: "
         f"{total_diagnoses}"
     )
@@ -769,6 +795,7 @@ async def run_autonomous_repair(
 
     return {
         "run_id": diagnosis_result["run_id"],
+        "repair_branch": repair_branch,
         "diagnoses": diagnoses,
         "repair_results": repair_results,
         "successful_repairs": successful_repairs,
@@ -793,6 +820,11 @@ async def main():
 
     print(
         f"Run ID: {result['run_id']}"
+    )
+
+    print(
+        f"Repair Branch: "
+        f"{result.get('repair_branch', 'N/A')}"
     )
 
     print(
