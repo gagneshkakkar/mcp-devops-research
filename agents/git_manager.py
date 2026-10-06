@@ -127,6 +127,28 @@ def commit_changes(
 
     return output
 
+def push_branch(
+    branch_name: str
+) -> str:
+    """
+    Push a repair branch to the GitHub remote.
+    """
+
+    success, output = run_git_command(
+        [
+            "push",
+            "-u",
+            "origin",
+            branch_name
+        ]
+    )
+
+    if not success:
+        raise RuntimeError(
+            f"Git push failed: {output}"
+        )
+
+    return output
 
 if __name__ == "__main__":
 
