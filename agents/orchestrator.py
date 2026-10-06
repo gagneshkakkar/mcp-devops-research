@@ -10,7 +10,8 @@ from agents.repair_applier import apply_repair
 from agents.repair_validator import validate_repair
 from agents.git_manager import (
     create_repair_branch,
-    commit_changes
+    commit_changes,
+    push_branch
 )
 
 
@@ -750,6 +751,22 @@ async def run_autonomous_repair(
 
         print(
             commit_output
+        )
+
+        # --------------------------------------------------
+        # Push validated repair branch
+        # --------------------------------------------------
+
+        print(
+            "\n---------- PUSHING REPAIR BRANCH ----------"
+        )
+
+        push_output = push_branch(
+            repair_branch
+        )
+
+        print(
+            push_output
         )
 
         overall_success = True
