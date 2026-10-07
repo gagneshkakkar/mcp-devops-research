@@ -172,3 +172,24 @@ if __name__ == "__main__":
         print(
             "Working tree clean."
         )
+
+def create_pull_request(
+    head_branch: str,
+    base_branch: str = "main",
+    title: str | None = None,
+    body: str | None = None
+) -> dict:
+    """
+    Create a GitHub Pull Request for an autonomous repair branch.
+    """
+
+    from mcp_server.github_client import (
+        create_pull_request as github_create_pull_request
+    )
+
+    return github_create_pull_request(
+        head_branch=head_branch,
+        base_branch=base_branch,
+        title=title,
+        body=body
+    )

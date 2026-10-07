@@ -11,7 +11,8 @@ from agents.repair_validator import validate_repair
 from agents.git_manager import (
     create_repair_branch,
     commit_changes,
-    push_branch
+    push_branch,
+    create_pull_request
 )
 
 
@@ -765,8 +766,43 @@ async def run_autonomous_repair(
             repair_branch
         )
 
+        print(push_output)
+
         print(
-            push_output
+            "\n---------- CREATING PULL REQUEST ----------"
+        )
+
+        pr_title = (
+            f"fix: autonomous repair for CI run "
+            f"{diagnosis_result['run_id']}"
+        )
+
+        pr_body = (
+            "## Autonomous CI/CD Repair\n\n"
+            f"Automatically generated repair for CI run "
+            f"`{diagnosis_result['run_id']}`.\n\n"
+            "### Validation\n"
+            f"- Diagnoses: {len(diagnoses)}\n"
+            f"- Successful repairs: {len(successful_repairs)}\n"
+            "- Full test suite: **PASSED**\n"
+            "- Repairs applied only to validated implementation targets\n"
+            "- Changes committed on an isolated repair branch\n\n"
+            "Please review the changes before merging."
+        )
+
+        pull_request = create_pull_request(
+            head_branch=repair_branch,
+            base_branch="main",
+            title=pr_title,
+            body=pr_body
+        )
+
+        print(
+            f"Pull Request #{pull_request['number']}"
+        )
+
+        print(
+            f"URL: {pull_request['url']}"
         )
 
         overall_success = True
