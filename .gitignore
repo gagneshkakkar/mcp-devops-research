@@ -3,4 +3,10 @@ __pycache__/
 *.pyc
 .env
 .vscode/
+
+.backups/
+
 chroma_db/
+*.zip
+
+run_*/
