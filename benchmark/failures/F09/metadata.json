@@ -1,0 +1,18 @@
+
+{
+  "id": "F09",
+  "title": "Python Runtime Compatibility",
+  "category": "runtime_error",
+  "language": "python",
+  "function": "get_runtime_label",
+  "input": {},
+  "expected_output": "compatible",
+  "broken_output": null,
+  "expected_exception": "RuntimeError",
+  "root_cause": "The implementation contains an incorrect runtime-version condition that raises an exception on Python 3.12.",
+  "expected_fix": {
+    "old_code": "if sys.version_info >= (3, 12):\n        raise RuntimeError(\"Simulated runtime incompatibility\")",
+    "new_code": ""
+  },
+  "difficulty": "medium"
+}

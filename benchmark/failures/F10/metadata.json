@@ -1,0 +1,17 @@
+{
+  "id": "F10",
+  "title": "Missing Environment Variable",
+  "category": "configuration_error",
+  "language": "python",
+  "function": "get_api_url",
+  "input": {},
+  "expected_output": "https://example.test/api",
+  "broken_output": null,
+  "expected_exception": "KeyError",
+  "root_cause": "The implementation requires BENCHMARK_API_URL, but the variable is unavailable.",
+  "expected_fix": {
+    "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+    "new_code": "return os.getenv(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+  },
+  "difficulty": "medium"
+}

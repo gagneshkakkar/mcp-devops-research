@@ -1,0 +1,21 @@
+
+{
+  "id": "F06",
+  "title": "Syntax Error",
+  "category": "syntax_error",
+  "language": "python",
+  "function": "add",
+  "input": {
+    "a": 2,
+    "b": 3
+  },
+  "expected_output": 5,
+  "broken_output": null,
+  "expected_exception": "SyntaxError",
+  "root_cause": "The add function definition is missing a colon.",
+  "expected_fix": {
+    "old_code": "def add(a: int, b: int) -> int",
+    "new_code": "def add(a: int, b: int) -> int:"
+  },
+  "difficulty": "easy"
+}

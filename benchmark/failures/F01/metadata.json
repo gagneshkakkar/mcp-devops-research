@@ -1,0 +1,20 @@
+
+{
+  "id": "F01",
+  "title": "Incorrect Arithmetic Logic",
+  "category": "logic_error",
+  "language": "python",
+  "function": "multiply",
+  "input": {
+    "a": 4,
+    "b": 3
+  },
+  "expected_output": 12,
+  "broken_output": 7,
+  "root_cause": "The multiply function uses addition instead of multiplication.",
+  "expected_fix": {
+    "old_code": "return a + b",
+    "new_code": "return a * b"
+  },
+  "difficulty": "easy"
+}

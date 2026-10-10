@@ -1,0 +1,19 @@
+
+{
+  "id": "F07",
+  "title": "Failed Assertion",
+  "category": "assertion_failure",
+  "language": "python",
+  "function": "is_even",
+  "input": {
+    "number": 4
+  },
+  "expected_output": true,
+  "broken_output": false,
+  "root_cause": "The is_even function checks whether the remainder is 1 instead of 0.",
+  "expected_fix": {
+    "old_code": "return number % 2 == 1",
+    "new_code": "return number % 2 == 0"
+  },
+  "difficulty": "easy"
+}
