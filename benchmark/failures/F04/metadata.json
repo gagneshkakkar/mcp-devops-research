@@ -1,0 +1,18 @@
+
+{
+  "id": "F04",
+  "title": "Wrong Function Name",
+  "category": "name_error",
+  "language": "python",
+  "function": "main",
+  "input": {},
+  "expected_output": 5,
+  "broken_output": null,
+  "expected_exception": "NameError",
+  "root_cause": "The main function calls calculate_summ, but the defined function is calculate_sum.",
+  "expected_fix": {
+    "old_code": "return calculate_summ(2, 3)",
+    "new_code": "return calculate_sum(2, 3)"
+  },
+  "difficulty": "easy"
+}

@@ -1,0 +1,21 @@
+
+{
+  "id": "F03",
+  "title": "Undefined Variable",
+  "category": "name_error",
+  "language": "python",
+  "function": "add",
+  "input": {
+    "a": 2,
+    "b": 3
+  },
+  "expected_output": 5,
+  "broken_output": null,
+  "expected_exception": "NameError",
+  "root_cause": "The add function references the undefined variable result.",
+  "expected_fix": {
+    "old_code": "return result",
+    "new_code": "return a + b"
+  },
+  "difficulty": "easy"
+}
