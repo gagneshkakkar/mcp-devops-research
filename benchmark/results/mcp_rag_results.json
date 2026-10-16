@@ -1,0 +1,212 @@
+{
+  "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+  "model": "qwen2.5-coder:7b",
+  "embedding_model": "nomic-embed-text",
+  "mcp_server": "benchmark/mcp_evidence_server.py",
+  "mcp_tool": "get_case_evidence",
+  "cases_recorded": 10,
+  "passed": 8,
+  "pass_rate_percent": 80.0,
+  "results": [
+    {
+      "case_id": "F01",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F01",
+        "F02",
+        "F04"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 49.623,
+      "evaluation": {
+        "status": "passed",
+        "actual": 12,
+        "expected": 12
+      }
+    },
+    {
+      "case_id": "F02",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F02",
+        "F01",
+        "F04"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 27.46,
+      "evaluation": {
+        "status": "passed",
+        "actual": 5.0,
+        "expected": 5
+      }
+    },
+    {
+      "case_id": "F03",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F03",
+        "F06",
+        "F04"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 20.478,
+      "evaluation": {
+        "status": "passed",
+        "actual": 5,
+        "expected": 5
+      }
+    },
+    {
+      "case_id": "F04",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F04",
+        "F03",
+        "F01"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 22.481,
+      "evaluation": {
+        "status": "passed",
+        "actual": 5,
+        "expected": 5
+      }
+    },
+    {
+      "case_id": "F05",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F05",
+        "F08",
+        "F04"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 15.68,
+      "evaluation": {
+        "status": "passed",
+        "actual": 4.0,
+        "expected": 4.0
+      }
+    },
+    {
+      "case_id": "F06",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F06",
+        "F03",
+        "F01"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 17.339,
+      "evaluation": {
+        "status": "passed",
+        "actual": 5,
+        "expected": 5
+      }
+    },
+    {
+      "case_id": "F07",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F07",
+        "F02",
+        "F01"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 19.708,
+      "evaluation": {
+        "status": "passed",
+        "actual": true,
+        "expected": true
+      }
+    },
+    {
+      "case_id": "F08",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F08",
+        "F05",
+        "F10"
+      ],
+      "status": "passed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 14.261,
+      "evaluation": {
+        "status": "passed",
+        "actual": 10,
+        "expected": 10
+      }
+    },
+    {
+      "case_id": "F09",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F09",
+        "F08",
+        "F10"
+      ],
+      "status": "test_failed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 22.023,
+      "evaluation": {
+        "status": "test_failed",
+        "actual": "incompatible",
+        "expected": "compatible"
+      }
+    },
+    {
+      "case_id": "F10",
+      "experiment": "single_llm_plus_semantic_rag_plus_mcp",
+      "model": "qwen2.5-coder:7b",
+      "embedding_model": "nomic-embed-text",
+      "mcp_tool_called": true,
+      "retrieved_case_ids": [
+        "F10",
+        "F08",
+        "F09"
+      ],
+      "status": "test_failed",
+      "mcp_tool": "get_case_evidence",
+      "generation_seconds": 20.298,
+      "evaluation": {
+        "status": "test_failed",
+        "actual": "http://default.api.url",
+        "expected": "https://example.test/api"
+      }
+    }
+  ]
+}

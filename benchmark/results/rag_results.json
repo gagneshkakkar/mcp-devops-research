@@ -1,0 +1,399 @@
+{
+  "experiment": "single_llm_plus_semantic_rag",
+  "model": "qwen2.5-coder:7b",
+  "embedding_model": "nomic-embed-text",
+  "retrieval_method": "cosine_similarity",
+  "top_k": 3,
+  "mode": "single_model_one_attempt_with_retrieval",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.944267
+        },
+        {
+          "id": "F02",
+          "title": "Incorrect Division Logic",
+          "category": "logic_error",
+          "similarity": 0.819389
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.762407
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "expected_output": 12,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F02",
+          "title": "Incorrect Division Logic",
+          "category": "logic_error",
+          "similarity": 0.948313
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.841835
+        },
+        {
+          "id": "F07",
+          "title": "Failed Assertion",
+          "category": "assertion_failure",
+          "similarity": 0.714727
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.950742
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.808862
+        },
+        {
+          "id": "F06",
+          "title": "Syntax Error",
+          "category": "syntax_error",
+          "similarity": 0.781968
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.958856
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.811236
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.767128
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.957115
+        },
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.792865
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.701253
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "expected_output": 4.0,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F06",
+          "title": "Syntax Error",
+          "category": "syntax_error",
+          "similarity": 0.948806
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.804285
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.76127
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "SyntaxError"
+      }
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F07",
+          "title": "Failed Assertion",
+          "category": "assertion_failure",
+          "similarity": 0.952529
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.700524
+        },
+        {
+          "id": "F02",
+          "title": "Incorrect Division Logic",
+          "category": "logic_error",
+          "similarity": 0.690365
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "expected_output": true,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "error",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.960269
+        },
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.788256
+        },
+        {
+          "id": "F10",
+          "title": "Missing Environment Variable",
+          "category": "configuration_error",
+          "similarity": 0.753399
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "AttributeError: module 'math' has no attribute 'double'"
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "test_failed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F09",
+          "title": "Python Runtime Compatibility",
+          "category": "runtime_error",
+          "similarity": 0.980616
+        },
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.725905
+        },
+        {
+          "id": "F10",
+          "title": "Missing Environment Variable",
+          "category": "configuration_error",
+          "similarity": 0.694925
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "behavior": {
+        "passed": false,
+        "actual_output": "incompatible",
+        "expected_output": "compatible",
+        "actual_exception": null,
+        "expected_exception": "RuntimeError"
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "test_failed",
+      "repair_strategy": "single_llm_plus_semantic_rag",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F10",
+          "title": "Missing Environment Variable",
+          "category": "configuration_error",
+          "similarity": 0.965202
+        },
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.751634
+        },
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.669953
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "behavior": {
+        "passed": false,
+        "actual_output": "http://default.api.url",
+        "expected_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_exception": "KeyError"
+      }
+    }
+  ],
+  "notes": [
+    "Uses retrieved benchmark metadata and broken source as evidence.",
+    "Expected implementations and expected fixes are excluded from the retrieval corpus.",
+    "One repair-generation call is made per case.",
+    "No multi-agent orchestrator or rule-based repair fallback is used.",
+    "The evaluator executes generated Python source. Only use trusted benchmark cases.",
+    "This experiment is separate from the saved single-LLM baseline."
+  ],
+  "summary": {
+    "passed": 7,
+    "error": 1,
+    "test_failed": 2
+  },
+  "passed_cases": 7,
+  "observed_pass_rate_percent": 70.0
+}

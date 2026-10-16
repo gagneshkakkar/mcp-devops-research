@@ -1,0 +1,66 @@
+{
+  "title": "Benchmark Comparison: Rule-Based, LLM, RAG, MCP, LOCO RAG, and Proposed System",
+  "dataset_size": 10,
+  "interpretation": "Descriptive comparison of saved pilot runs on a small custom benchmark. These results do not establish statistical significance or prove that MCP or LOCO retrieval alone caused any observed difference.",
+  "approaches": [
+    {
+      "approach": "Rule-based baseline",
+      "source_file": "baseline_rule_results.json",
+      "cases": 10,
+      "passed": 9,
+      "pass_rate_percent": 90.0,
+      "limitation": "Uses benchmark-specific hand-coded rules, not a general repair system."
+    },
+    {
+      "approach": "Single LLM",
+      "source_file": "baseline_single_llm_results.json",
+      "cases": 10,
+      "passed": 7,
+      "pass_rate_percent": 70.0,
+      "limitation": "One local Qwen call per case; no retries or fallbacks."
+    },
+    {
+      "approach": "LLM + semantic RAG",
+      "source_file": "rag_results.json",
+      "cases": 10,
+      "passed": 7,
+      "pass_rate_percent": 70.0,
+      "limitation": "The retrieval corpus includes target-case broken metadata/source, allowing self-retrieval."
+    },
+    {
+      "approach": "LLM + semantic RAG + MCP",
+      "source_file": "mcp_rag_results.json",
+      "cases": 10,
+      "passed": 8,
+      "pass_rate_percent": 80.0,
+      "limitation": "Single pilot run; two cases failed behavioral evaluation."
+    },
+    {
+      "approach": "LLM + leave-one-case-out semantic RAG",
+      "source_file": "rag_loco_results.json",
+      "cases": 10,
+      "passed": 7,
+      "pass_rate_percent": 70.0,
+      "limitation": "Excludes each target case from retrieval. The observed result comes from one 10-case run and does not establish statistical significance or generalization to unseen projects."
+    },
+    {
+      "approach": "Proposed multi-agent repair pipeline",
+      "source_file": "evaluation_report.json",
+      "cases": 10,
+      "passed": 9,
+      "pass_rate_percent": 90.0,
+      "limitation": "Uses the saved proposed-system evaluation snapshot; no experiment was rerun to generate this comparison."
+    }
+  ],
+  "targeted_follow_up": {
+    "experiment": "f10_explicit_behavior_contract_prompt",
+    "source_file": "f10_prompt_test.json",
+    "case_id": "F10",
+    "status": "passed",
+    "expected_when_unset": "https://example.test/api",
+    "actual_when_unset": "https://example.test/api",
+    "expected_when_set": "https://configured.example/api",
+    "actual_when_set": "https://configured.example/api",
+    "interpretation": "A targeted single-case follow-up, not a 10-case benchmark result. Its status must not be compared directly with the overall pass rates."
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "experiment": "autonomous_ci_repair_benchmark",
+  "mode": "isolated_workspace",
+  "created_at": "2026-10-10T09:17:01.656349+00:00",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "category": "logic_error",
+      "function": "multiply",
+      "input": {
+        "a": 4,
+        "b": 3
+      },
+      "expected_output": 12,
+      "expected_exception": null,
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F01\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F01\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "category": "logic_error",
+      "function": "divide",
+      "input": {
+        "a": 10,
+        "b": 2
+      },
+      "expected_output": 5,
+      "expected_exception": null,
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F02\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F02\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "category": "name_error",
+      "function": "add",
+      "input": {
+        "a": 2,
+        "b": 3
+      },
+      "expected_output": 5,
+      "expected_exception": "NameError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F03\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F03\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "category": "name_error",
+      "function": "main",
+      "input": {},
+      "expected_output": 5,
+      "expected_exception": "NameError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F04\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F04\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "category": "import_error",
+      "function": "calculate_square_root",
+      "input": {
+        "value": 16
+      },
+      "expected_output": 4.0,
+      "expected_exception": "NameError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F05\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F05\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "category": "syntax_error",
+      "function": "add",
+      "input": {
+        "a": 2,
+        "b": 3
+      },
+      "expected_output": 5,
+      "expected_exception": "SyntaxError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F06\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F06\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "category": "assertion_failure",
+      "function": "is_even",
+      "input": {
+        "number": 4
+      },
+      "expected_output": true,
+      "expected_exception": null,
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F07\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F07\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "category": "dependency_error",
+      "function": "calculate",
+      "input": {
+        "value": 5
+      },
+      "expected_output": 10,
+      "expected_exception": "ModuleNotFoundError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F08\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F08\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "category": "runtime_error",
+      "function": "get_runtime_label",
+      "input": {},
+      "expected_output": "compatible",
+      "expected_exception": "RuntimeError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F09\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F09\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "category": "configuration_error",
+      "function": "get_api_url",
+      "input": {},
+      "expected_output": "https://example.test/api",
+      "expected_exception": "KeyError",
+      "workspace_file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F10\\calculator.py",
+      "expected_file": "D:\\Research\\mcp-devops-research\\benchmark\\failures\\F10\\expected\\calculator.py",
+      "status": "prepared",
+      "repair_attempted": false,
+      "repair_approved": false,
+      "tests_passed": false
+    }
+  ]
+}

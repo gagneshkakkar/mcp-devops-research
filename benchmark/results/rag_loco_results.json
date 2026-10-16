@@ -1,0 +1,406 @@
+{
+  "experiment": "single_llm_plus_leave_one_case_out_semantic_rag",
+  "model": "qwen2.5-coder:7b",
+  "embedding_model": "nomic-embed-text",
+  "retrieval_method": "cosine_similarity_leave_one_case_out",
+  "top_k": 3,
+  "mode": "single_model_one_attempt_with_loco_retrieval",
+  "total_cases": 10,
+  "retrieval_policy": "The current test case is excluded from retrieval candidates.",
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F01",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F02",
+          "title": "Incorrect Division Logic",
+          "category": "logic_error",
+          "similarity": 0.819389
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.762407
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.757648
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "expected_output": 12,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F02",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.841835
+        },
+        {
+          "id": "F07",
+          "title": "Failed Assertion",
+          "category": "assertion_failure",
+          "similarity": 0.714727
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.711066
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F03",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.808862
+        },
+        {
+          "id": "F06",
+          "title": "Syntax Error",
+          "category": "syntax_error",
+          "similarity": 0.781968
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.753021
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F04",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.811236
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.767128
+        },
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.69524
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F05",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.792865
+        },
+        {
+          "id": "F04",
+          "title": "Wrong Function Name",
+          "category": "name_error",
+          "similarity": 0.701253
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.685415
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "expected_output": 4.0,
+        "actual_exception": null,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F06",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.804285
+        },
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.76127
+        },
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.712665
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null,
+        "expected_exception": "SyntaxError"
+      }
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F07",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F01",
+          "title": "Incorrect Arithmetic Logic",
+          "category": "logic_error",
+          "similarity": 0.700524
+        },
+        {
+          "id": "F02",
+          "title": "Incorrect Division Logic",
+          "category": "logic_error",
+          "similarity": 0.690365
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.660956
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "expected_output": true,
+        "actual_exception": null,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "error",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F08",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.788256
+        },
+        {
+          "id": "F10",
+          "title": "Missing Environment Variable",
+          "category": "configuration_error",
+          "similarity": 0.753399
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.701881
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "ModuleNotFoundError: No module named 'benchmark_missing_package'"
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "test_failed",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F09",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.725905
+        },
+        {
+          "id": "F10",
+          "title": "Missing Environment Variable",
+          "category": "configuration_error",
+          "similarity": 0.694925
+        },
+        {
+          "id": "F03",
+          "title": "Undefined Variable",
+          "category": "name_error",
+          "similarity": 0.689108
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "behavior": {
+        "passed": false,
+        "actual_output": "incompatible",
+        "expected_output": "compatible",
+        "actual_exception": null,
+        "expected_exception": "RuntimeError"
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "error",
+      "repair_strategy": "single_llm_plus_leave_one_case_out_rag",
+      "excluded_case_id": "F10",
+      "llm_calls": 1,
+      "retrieved_documents": [
+        {
+          "id": "F08",
+          "title": "Missing Dependency",
+          "category": "dependency_error",
+          "similarity": 0.751634
+        },
+        {
+          "id": "F05",
+          "title": "Missing Import",
+          "category": "import_error",
+          "similarity": 0.669953
+        },
+        {
+          "id": "F09",
+          "title": "Python Runtime Compatibility",
+          "category": "runtime_error",
+          "similarity": 0.662643
+        }
+      ],
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "OSError: BENCHMARK_API_URL environment variable is not set"
+    }
+  ],
+  "notes": [
+    "Uses the same local Qwen model and embedding model as the RAG pilot.",
+    "Excludes each target case from its retrieval candidates.",
+    "Uses metadata and broken source from other benchmark cases.",
+    "Expected implementations and expected fixes are excluded from retrieval documents.",
+    "One repair-generation call is made per case.",
+    "No retries, multi-agent orchestrator, or repair fallback is used.",
+    "Each case is evaluated in a separate workspace.",
+    "This experiment writes to rag_loco_results.json and does not overwrite the original RAG results.",
+    "The evaluator executes generated Python source. Only use trusted benchmark cases."
+  ],
+  "summary": {
+    "passed": 7,
+    "error": 2,
+    "test_failed": 1
+  },
+  "passed_cases": 7,
+  "observed_pass_rate_percent": 70.0
+}

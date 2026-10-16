@@ -1,0 +1,109 @@
+{
+  "report_type": "isolated_ci_repair_benchmark",
+  "source_file": "D:\\Research\\mcp-devops-research\\benchmark\\results\\repair_results_90pct_run.json",
+  "generated_at_utc": "2026-10-15T08:35:45.838703+00:00",
+  "experiment": "autonomous_ci_repair_benchmark",
+  "mode": "isolated_repair",
+  "total_cases": 10,
+  "passed_cases": 9,
+  "unsupported_cases": 1,
+  "failed_or_rejected_cases": 0,
+  "observed_pass_rate_percent": 90.0,
+  "strategy_counts": {
+    "llm_patch_pipeline": 7,
+    "llm_plus_dependency_cleanup": 1,
+    "fallback_assisted": 1,
+    "unsupported": 1,
+    "other_or_unknown": 0
+  },
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "recorded_strategy": "missing_import_fallback",
+      "classification": "fallback_assisted",
+      "tests_passed": true
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "unsupported_syntax_error",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "unsupported",
+      "tests_passed": false
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_plus_dependency_cleanup",
+      "tests_passed": true
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "passed",
+      "recorded_strategy": "llm_function_patch",
+      "classification": "llm_patch_pipeline",
+      "tests_passed": true
+    }
+  ],
+  "limitations": [
+    "This is one run on a custom benchmark of ten cases.",
+    "The observed pass rate does not establish general repair reliability.",
+    "F06 is unsupported by the current syntax-dependent repair pipeline.",
+    "F05 uses a missing-import fallback.",
+    "F08 uses an LLM patch followed by dependency cleanup.",
+    "Strategy counts describe this run and are not baseline comparisons."
+  ]
+}
