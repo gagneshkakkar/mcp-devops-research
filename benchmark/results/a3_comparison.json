@@ -25,7 +25,7 @@
       "cases": 10,
       "passed": 7,
       "pass_rate_percent": 70.0,
-      "limitation": "The retrieval corpus includes target-case broken metadata/source, allowing self-retrieval."
+      "limitation": "Historical run. The retrieval corpus includes target-case broken metadata/source, allowing self-retrieval."
     },
     {
       "approach": "LLM + semantic RAG + MCP",
@@ -52,6 +52,171 @@
       "limitation": "Uses the saved proposed-system evaluation snapshot; no experiment was rerun to generate this comparison."
     }
   ],
+  "instrumented_repeat_run": {
+    "experiment": "single_llm_plus_semantic_rag_instrumented",
+    "run_id": "27a8a352-368e-441c-9c12-00cca7ba979e",
+    "source_file": "rag_instrumented_results.json",
+    "started_at_utc": "2026-10-16T07:47:18.920265+00:00",
+    "completed_at_utc": "2026-10-16T07:54:43.527743+00:00",
+    "model": "qwen2.5-coder:7b",
+    "embedding_model": "nomic-embed-text",
+    "retrieval_method": "cosine_similarity",
+    "top_k": 3,
+    "cases": 10,
+    "passed": 7,
+    "pass_rate_percent": 70.0,
+    "elapsed_seconds": 444.6072,
+    "aggregate_token_usage": {
+      "prompt_tokens": 6528,
+      "completion_tokens": 371,
+      "total_tokens": 6899
+    },
+    "summary": {
+      "passed": 7,
+      "error": 1,
+      "test_failed": 2
+    },
+    "per_case_metrics": [
+      {
+        "case_id": "F01",
+        "status": "passed",
+        "elapsed_seconds": 111.645,
+        "retrieval_seconds": 35.9015,
+        "generation_seconds": 75.7261,
+        "evaluation_seconds": 0.005,
+        "token_usage": {
+          "prompt_tokens": 684,
+          "completion_tokens": 33,
+          "total_tokens": 717
+        }
+      },
+      {
+        "case_id": "F02",
+        "status": "passed",
+        "elapsed_seconds": 50.9273,
+        "retrieval_seconds": 5.5889,
+        "generation_seconds": 45.3206,
+        "evaluation_seconds": 0.0037,
+        "token_usage": {
+          "prompt_tokens": 695,
+          "completion_tokens": 49,
+          "total_tokens": 744
+        }
+      },
+      {
+        "case_id": "F03",
+        "status": "passed",
+        "elapsed_seconds": 41.9588,
+        "retrieval_seconds": 2.2653,
+        "generation_seconds": 39.6453,
+        "evaluation_seconds": 0.0352,
+        "token_usage": {
+          "prompt_tokens": 640,
+          "completion_tokens": 38,
+          "total_tokens": 678
+        }
+      },
+      {
+        "case_id": "F04",
+        "status": "passed",
+        "elapsed_seconds": 37.2335,
+        "retrieval_seconds": 2.3815,
+        "generation_seconds": 34.7466,
+        "evaluation_seconds": 0.0036,
+        "token_usage": {
+          "prompt_tokens": 665,
+          "completion_tokens": 41,
+          "total_tokens": 706
+        }
+      },
+      {
+        "case_id": "F05",
+        "status": "passed",
+        "elapsed_seconds": 28.3053,
+        "retrieval_seconds": 2.236,
+        "generation_seconds": 26.0389,
+        "evaluation_seconds": 0.019,
+        "token_usage": {
+          "prompt_tokens": 626,
+          "completion_tokens": 25,
+          "total_tokens": 651
+        }
+      },
+      {
+        "case_id": "F06",
+        "status": "passed",
+        "elapsed_seconds": 27.6138,
+        "retrieval_seconds": 2.2324,
+        "generation_seconds": 25.365,
+        "evaluation_seconds": 0.0054,
+        "token_usage": {
+          "prompt_tokens": 618,
+          "completion_tokens": 24,
+          "total_tokens": 642
+        }
+      },
+      {
+        "case_id": "F07",
+        "status": "passed",
+        "elapsed_seconds": 34.032,
+        "retrieval_seconds": 2.3426,
+        "generation_seconds": 31.6751,
+        "evaluation_seconds": 0.0034,
+        "token_usage": {
+          "prompt_tokens": 680,
+          "completion_tokens": 34,
+          "total_tokens": 714
+        }
+      },
+      {
+        "case_id": "F08",
+        "status": "error",
+        "elapsed_seconds": 43.3317,
+        "retrieval_seconds": 2.2581,
+        "generation_seconds": 40.2446,
+        "evaluation_seconds": null,
+        "token_usage": {
+          "prompt_tokens": 618,
+          "completion_tokens": 54,
+          "total_tokens": 672
+        }
+      },
+      {
+        "case_id": "F09",
+        "status": "test_failed",
+        "elapsed_seconds": 36.7624,
+        "retrieval_seconds": 2.3553,
+        "generation_seconds": 34.3895,
+        "evaluation_seconds": 0.0039,
+        "token_usage": {
+          "prompt_tokens": 685,
+          "completion_tokens": 40,
+          "total_tokens": 725
+        }
+      },
+      {
+        "case_id": "F10",
+        "status": "test_failed",
+        "elapsed_seconds": 32.5315,
+        "retrieval_seconds": 2.4535,
+        "generation_seconds": 29.7053,
+        "evaluation_seconds": 0.0046,
+        "token_usage": {
+          "prompt_tokens": 617,
+          "completion_tokens": 33,
+          "total_tokens": 650
+        }
+      }
+    ],
+    "interpretation": "A separate instrumented repeat of the semantic RAG approach. It is reported as a repeat run, not as a new approach or an independent baseline.",
+    "limitations": [
+      "The result is from one run on the custom 10-case dataset.",
+      "The original RAG retrieval corpus allows target-case self-retrieval.",
+      "Token usage depends on what the local model endpoint reports.",
+      "Elapsed time depends on local hardware and system load.",
+      "The observed pass rate does not establish statistical significance or generalization to unseen projects."
+    ]
+  },
   "targeted_follow_up": {
     "experiment": "f10_explicit_behavior_contract_prompt",
     "source_file": "f10_prompt_test.json",
