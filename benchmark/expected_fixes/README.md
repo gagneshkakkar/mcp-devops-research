@@ -1,4 +1,6 @@
+@"
 # Expected Fixes
 
-This directory contains the expected solutions or patches for benchmark
-failure cases.
+This directory is reserved for reference patches and corrected implementations
+associated with the benchmark failure cases.
+"@ | Set-Content benchmark\expected_fixes\README.md

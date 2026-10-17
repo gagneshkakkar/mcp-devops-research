@@ -1,0 +1,16 @@
+{
+  "experiment": "f10_explicit_behavior_contract_prompt",
+  "model": "qwen2.5-coder:7b",
+  "case_id": "F10",
+  "status": "passed",
+  "expected_when_unset": "https://example.test/api",
+  "actual_when_unset": "https://example.test/api",
+  "expected_when_set": "https://configured.example/api",
+  "actual_when_set": "https://configured.example/api",
+  "generated_source": "import os\n\ndef get_api_url() -> str:\n    return os.environ.get(\"BENCHMARK_API_URL\", \"https://example.test/api\")\n",
+  "notes": [
+    "Separate prompt experiment; existing RAG and LOCO results are untouched.",
+    "The environment variable is restored after evaluation.",
+    "The generated code is executed locally; use only trusted benchmark cases."
+  ]
+}

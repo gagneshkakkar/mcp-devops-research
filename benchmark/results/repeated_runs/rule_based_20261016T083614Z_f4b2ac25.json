@@ -1,0 +1,290 @@
+{
+  "run_id": "f4b2ac25-137d-423f-ae7c-6ec63776cea8",
+  "approach": "rule_based",
+  "started_at_utc": "2026-10-16T08:36:14.086849+00:00",
+  "completed_at_utc": "2026-10-16T08:36:14.147298+00:00",
+  "model_config": {
+    "provider": null,
+    "model": null,
+    "temperature": null,
+    "llm_calls": 0,
+    "notes": "Deterministic benchmark-specific rules; no LLM."
+  },
+  "dataset": {
+    "name": "custom_10_case_ci_failure_benchmark",
+    "case_count": 10,
+    "case_ids": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "F10"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "F01",
+      "status": "passed",
+      "elapsed_seconds": 0.007006700000601995,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0014677999997729785,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Applied multiplication rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "actual_exception": null,
+        "expected_output": 12
+      }
+    },
+    {
+      "case_id": "F02",
+      "status": "passed",
+      "elapsed_seconds": 0.0062825000004522735,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001708400000097754,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Applied division rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "case_id": "F03",
+      "status": "passed",
+      "elapsed_seconds": 0.005192300000089745,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001586200000019744,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Applied undefined-variable rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "case_id": "F04",
+      "status": "passed",
+      "elapsed_seconds": 0.004527299999608658,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0016530000002603629,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Applied function-name rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "case_id": "F05",
+      "status": "passed",
+      "elapsed_seconds": 0.005613000000266766,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0016261000000667991,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Added the standard-library math import.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "actual_exception": null,
+        "expected_output": 4.0
+      }
+    },
+    {
+      "case_id": "F06",
+      "status": "unsupported_syntax_error",
+      "elapsed_seconds": 0.005560099999456725,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": null,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": false,
+      "error": "expected ':' (calculator.py, line 1)"
+    },
+    {
+      "case_id": "F07",
+      "status": "passed",
+      "elapsed_seconds": 0.005741300000408955,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001996500000132073,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Applied even-number rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "actual_exception": null,
+        "expected_output": true
+      }
+    },
+    {
+      "case_id": "F08",
+      "status": "passed",
+      "elapsed_seconds": 0.003856199999972887,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0012517999994088314,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Replaced missing dependency and removed its import.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 10,
+        "actual_exception": null,
+        "expected_output": 10
+      }
+    },
+    {
+      "case_id": "F09",
+      "status": "passed",
+      "elapsed_seconds": 0.0063009000004967675,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0016062999993664562,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Removed simulated runtime incompatibility block.",
+      "behavior": {
+        "passed": true,
+        "actual_output": "compatible",
+        "actual_exception": null,
+        "expected_output": "compatible"
+      }
+    },
+    {
+      "case_id": "F10",
+      "status": "passed",
+      "elapsed_seconds": 0.0042177999994237325,
+      "llm_calls": 0,
+      "token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": null,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001559399999678135,
+      "repair_strategy": "predefined_rule",
+      "repair_applied": true,
+      "error": null,
+      "rule_message": "Added default URL handling.",
+      "behavior": {
+        "passed": true,
+        "actual_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_output": "https://example.test/api"
+      }
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "total_cases": 10,
+    "pass_rate_percent": 90.0,
+    "status_counts": {
+      "passed": 9,
+      "unsupported_syntax_error": 1
+    },
+    "total_elapsed_seconds": 0.054298100000778504
+  },
+  "limitations": [
+    "Rules are specifically written for this custom benchmark.",
+    "This is not a general-purpose repair baseline.",
+    "F06 syntax-error repair is intentionally unsupported.",
+    "No LLM calls or token usage occur in this approach."
+  ]
+}

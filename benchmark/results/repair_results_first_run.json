@@ -1,0 +1,301 @@
+{
+  "experiment": "autonomous_ci_repair_benchmark",
+  "mode": "isolated_repair",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F01/calculator.py",
+        "function": "multiply",
+        "reason": "The function was adding instead of multiplying.",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the addition operation to a multiplication operation, which correctly implements the multiplication logic."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F01\\calculator.py",
+        "function": "multiply",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_145959_597634.py",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "actual_exception": null,
+        "expected_output": 12,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "rejected",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F02/calculator.py",
+        "function": "divide",
+        "reason": "Incorrect division logic",
+        "old_code": "return a * b",
+        "new_code": "return a / b"
+      },
+      "validation": {
+        "approved": false,
+        "reason": "The proposed patch changes the implementation from multiplication to division, which does not match the expected behavior."
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "test_failed",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F03/calculator.py",
+        "function": "add",
+        "reason": "Variable 'result' is not defined",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces the undefined variable 'result' with the correct expression 'a + b', which moves the implementation toward the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F03\\calculator.py",
+        "function": "add",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_150158_080564.py",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "behavior": {
+        "passed": false,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "test_failed",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F04/calculator.py",
+        "function": "main",
+        "reason": "The function name should be 'calculate_sum' to match the function being called.",
+        "old_code": "return calculate_summ(2, 3)",
+        "new_code": "return calculate_sum(2, 3)"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch corrects the function name from 'calculate_summ' to 'calculate_sum', which matches the expected behavior."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F04\\calculator.py",
+        "function": "main",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_150304_979675.py",
+        "old_code": "return calculate_summ(2, 3)",
+        "new_code": "return calculate_sum(2, 3)"
+      },
+      "behavior": {
+        "passed": false,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "error",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "SyntaxError: 'return' outside function (calculator.py, line 3)",
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F05/calculator.py",
+        "function": "calculate_square_root",
+        "reason": "Missing math module import",
+        "old_code": "return math.sqrt(value)",
+        "new_code": "import math\nreturn math.sqrt(value)"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch adds the missing import statement, which resolves the NameError and moves the implementation toward the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F05\\calculator.py",
+        "function": "calculate_square_root",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_150405_650743.py",
+        "old_code": "return math.sqrt(value)",
+        "new_code": "import math\nreturn math.sqrt(value)"
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "unsupported_syntax_error",
+      "repair_attempted": false,
+      "repair_generated": false,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": "expected ':' (calculator.py, line 1)"
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F07/calculator.py",
+        "function": "is_even",
+        "reason": "The function checks if a number is odd, not even.",
+        "old_code": "number % 2 == 1",
+        "new_code": "number % 2 == 0"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the condition from checking if a number is odd (number % 2 == 1) to checking if a number is even (number % 2 == 0), which is the correct implementation for the is_even function."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F07\\calculator.py",
+        "function": "is_even",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_150518_422119.py",
+        "old_code": "number % 2 == 1",
+        "new_code": "number % 2 == 0"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "actual_exception": null,
+        "expected_output": true,
+        "expected_exception": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "error",
+      "repair_attempted": true,
+      "repair_generated": false,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": "ValueError: Repair rejected: old_code and new_code are identical."
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "rejected",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F09/calculator.py",
+        "function": "get_runtime_label",
+        "reason": "The function is not compatible with Python 3.12",
+        "old_code": "raise RuntimeError(\"Simulated runtime incompatibility\")",
+        "new_code": "return \"compatible\""
+      },
+      "validation": {
+        "approved": false,
+        "reason": "The proposed patch changes the implementation to return 'compatible' instead of raising a RuntimeError, which does not move the implementation toward the expected exception."
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "test_failed",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F10/calculator.py",
+        "function": "get_api_url",
+        "reason": "Use a default URL if the environment variable is missing",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.environ.get(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch correctly handles the case where the environment variable is missing by providing a default value."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F10\\calculator.py",
+        "function": "get_api_url",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261010_150802_890893.py",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.environ.get(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "behavior": {
+        "passed": false,
+        "actual_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_output": "https://example.test/api",
+        "expected_exception": "KeyError"
+      }
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "rejected": 2,
+    "test_failed": 3,
+    "error": 2,
+    "unsupported_syntax_error": 1
+  }
+}

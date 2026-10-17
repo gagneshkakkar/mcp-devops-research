@@ -1,0 +1,366 @@
+{
+  "experiment": "autonomous_ci_repair_benchmark",
+  "mode": "isolated_repair",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F01/calculator.py",
+        "function": "multiply",
+        "reason": "Incorrect Arithmetic Logic, should use 'a * b' instead of 'a + b'",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the addition operation to multiplication, which correctly implements the expected arithmetic logic."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F01\\calculator.py",
+        "function": "multiply",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135319_201971.py",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "actual_exception": null,
+        "expected_output": 12,
+        "original_expected_exception": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F02/calculator.py",
+        "function": "divide",
+        "reason": "Fixed division logic by using true division operator",
+        "old_code": "return a * b",
+        "new_code": "return a / b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the multiplication operation to a division operation, which correctly fixes the reported CI/CD failure."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F02\\calculator.py",
+        "function": "divide",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135419_420511.py",
+        "old_code": "return a * b",
+        "new_code": "return a / b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": null
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F03/calculator.py",
+        "function": "add",
+        "reason": "Undefined variable 'result'",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces 'return result' with 'return a + b', which correctly implements the addition of two numbers and moves the implementation toward the expected result of 5."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F03\\calculator.py",
+        "function": "add",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135521_940798.py",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F04/calculator.py",
+        "function": "main",
+        "reason": "The function name 'calculate_summ' is incorrect. It should be 'calculate_sum'.",
+        "old_code": "return calculate_summ(2, 3)",
+        "new_code": "return calculate_sum(2, 3)"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes 'calculate_summ(2, 3)' to 'calculate_sum(2, 3)', which corrects the function name and resolves the NameError."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F04\\calculator.py",
+        "function": "main",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135634_695694.py",
+        "old_code": "return calculate_summ(2, 3)",
+        "new_code": "return calculate_sum(2, 3)"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "missing_import_fallback",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "module": "math",
+        "operation": "add_module_level_import"
+      },
+      "application": {
+        "success": true,
+        "message": "Added import math at module scope."
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "actual_exception": null,
+        "expected_output": 4.0,
+        "original_expected_exception": "NameError"
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "unsupported_syntax_error",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": false,
+      "repair_generated": false,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": "expected ':' (calculator.py, line 1)"
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F07/calculator.py",
+        "function": "is_even",
+        "reason": "The original code checks if the number is odd, not even.",
+        "old_code": "return number % 2 == 1",
+        "new_code": "return number % 2 == 0"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the implementation from checking if a number is odd (number % 2 == 1) to checking if a number is even (number % 2 == 0), which is the expected behavior."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F07\\calculator.py",
+        "function": "is_even",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135747_108536.py",
+        "old_code": "return number % 2 == 1",
+        "new_code": "return number % 2 == 0"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "actual_exception": null,
+        "expected_output": true,
+        "original_expected_exception": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F08/calculator.py",
+        "function": "calculate",
+        "reason": "Missing dependency on benchmark_missing_package. Replaced with Python built-in implementation.",
+        "old_code": "return benchmark_missing_package.double(value)",
+        "new_code": "return value * 2"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces the unavailable dependency with a Python built-in function, which moves the implementation toward the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F08\\calculator.py",
+        "function": "calculate",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_135851_974187.py",
+        "old_code": "return benchmark_missing_package.double(value)",
+        "new_code": "return value * 2"
+      },
+      "dependency_cleanup": {
+        "success": true,
+        "message": "Removed unused import: import benchmark_missing_package"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 10,
+        "actual_exception": null,
+        "expected_output": 10,
+        "original_expected_exception": "ModuleNotFoundError"
+      }
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F09/calculator.py",
+        "function": "get_runtime_label",
+        "reason": "Remove the if block that raises the simulated RuntimeError",
+        "old_code": "if sys.version_info >= (3, 12):\n        raise RuntimeError(\"Simulated runtime incompatibility\")",
+        "new_code": "return \"compatible\""
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch correctly replaces the problematic if block with the compatible return statement, moving the implementation toward the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F09\\calculator.py",
+        "function": "get_runtime_label",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_140045_681837.py",
+        "old_code": "if sys.version_info >= (3, 12):\n        raise RuntimeError(\"Simulated runtime incompatibility\")",
+        "new_code": "return \"compatible\""
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": "compatible",
+        "actual_exception": null,
+        "expected_output": "compatible",
+        "original_expected_exception": "RuntimeError"
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/workspaces/F10/calculator.py",
+        "function": "get_api_url",
+        "reason": "Handle missing environment variable by providing a default URL",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.getenv(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch correctly handles the missing environment variable by using os.getenv with a default value, which aligns with the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\F10\\calculator.py",
+        "function": "get_api_url",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\workspaces\\.backups\\calculator_20261015_140154_412816.py",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.getenv(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_output": "https://example.test/api",
+        "original_expected_exception": "KeyError"
+      }
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "unsupported_syntax_error": 1
+  }
+}

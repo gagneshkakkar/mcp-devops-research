@@ -1,0 +1,19 @@
+{
+  "id": "F08",
+  "title": "Missing Dependency",
+  "category": "dependency_error",
+  "language": "python",
+  "function": "calculate",
+  "input": {
+    "value": 5
+  },
+  "expected_output": 10,
+  "broken_output": null,
+  "expected_exception": "ModuleNotFoundError",
+  "root_cause": "The implementation imports a module that is unavailable in the environment.",
+  "expected_fix": {
+    "old_code": "import benchmark_missing_package",
+    "new_code": "def calculate(value: int) -> int:\n    return value * 2"
+  },
+  "difficulty": "medium"
+}

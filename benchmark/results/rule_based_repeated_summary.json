@@ -1,0 +1,150 @@
+{
+  "approach": "rule_based",
+  "run_count": 3,
+  "run_ids": [
+    "099685ee-3b07-4057-a4cf-7fa7a805e9b2",
+    "836bf7de-1e17-41b6-b3fc-6ac48f112a73",
+    "f4b2ac25-137d-423f-ae7c-6ec63776cea8"
+  ],
+  "pass_rate_percent": {
+    "count": 3,
+    "mean": 90.0,
+    "median": 90.0,
+    "sample_standard_deviation": 0.0
+  },
+  "total_case_elapsed_seconds_per_run": {
+    "count": 3,
+    "mean": 0.115221,
+    "median": 0.118926,
+    "sample_standard_deviation": 0.059158
+  },
+  "per_case": {
+    "F01": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.013061,
+        "median": 0.011,
+        "sample_standard_deviation": 0.007306
+      }
+    },
+    "F02": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.010133,
+        "median": 0.011228,
+        "sample_standard_deviation": 0.003437
+      }
+    },
+    "F03": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.009563,
+        "median": 0.009821,
+        "sample_standard_deviation": 0.004247
+      }
+    },
+    "F04": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.012099,
+        "median": 0.013934,
+        "sample_standard_deviation": 0.006842
+      }
+    },
+    "F05": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.009607,
+        "median": 0.011201,
+        "sample_standard_deviation": 0.003482
+      }
+    },
+    "F06": {
+      "status_counts": {
+        "unsupported_syntax_error": 3
+      },
+      "passed_in_all_runs": false,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.006621,
+        "median": 0.006133,
+        "sample_standard_deviation": 0.001371
+      }
+    },
+    "F07": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.016424,
+        "median": 0.011242,
+        "sample_standard_deviation": 0.014012
+      }
+    },
+    "F08": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.015031,
+        "median": 0.013797,
+        "sample_standard_deviation": 0.01184
+      }
+    },
+    "F09": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.013874,
+        "median": 0.012138,
+        "sample_standard_deviation": 0.008574
+      }
+    },
+    "F10": {
+      "status_counts": {
+        "passed": 3
+      },
+      "passed_in_all_runs": true,
+      "elapsed_seconds": {
+        "count": 3,
+        "mean": 0.008809,
+        "median": 0.009871,
+        "sample_standard_deviation": 0.004163
+      }
+    }
+  },
+  "limitations": [
+    "Only repeated rule-based runs are summarized.",
+    "The benchmark contains 10 custom cases.",
+    "Repeated runs on the same machine are not independent hardware trials.",
+    "Timing can vary with operating-system scheduling and filesystem caching.",
+    "The reported elapsed time sums per-case measurements and excludes process startup."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "F05",
+  "title": "Missing Import",
+  "category": "import_error",
+  "language": "python",
+  "function": "calculate_square_root",
+  "input": {
+    "value": 16
+  },
+  "expected_output": 4.0,
+  "broken_output": null,
+  "expected_exception": "NameError",
+  "root_cause": "The math module is used without being imported.",
+  "expected_fix": {
+    "old_code": "",
+    "new_code": "import math"
+  },
+  "difficulty": "easy"
+}

@@ -1,0 +1,180 @@
+{
+  "experiment": "benchmark_specific_rule_based_baseline",
+  "mode": "isolated_rule_based",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Applied multiplication rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "actual_exception": null,
+        "expected_output": 12
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Applied division rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Applied undefined-variable rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Applied function-name rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Added the standard-library math import.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "actual_exception": null,
+        "expected_output": 4.0
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "unsupported_syntax_error",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": "expected ':' (calculator.py, line 1)"
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Applied even-number rule.",
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "actual_exception": null,
+        "expected_output": true
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Replaced missing dependency and removed its import.",
+      "behavior": {
+        "passed": true,
+        "actual_output": 10,
+        "actual_exception": null,
+        "expected_output": 10
+      }
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Removed simulated runtime incompatibility block.",
+      "behavior": {
+        "passed": true,
+        "actual_output": "compatible",
+        "actual_exception": null,
+        "expected_output": "compatible"
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "passed",
+      "repair_strategy": "predefined_rule",
+      "repair_attempted": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "rule_message": "Added default URL handling.",
+      "behavior": {
+        "passed": true,
+        "actual_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_output": "https://example.test/api"
+      }
+    }
+  ],
+  "notes": [
+    "Rules are specifically written for this 10-case benchmark.",
+    "No LLM calls are made.",
+    "F06 syntax-error repair is intentionally unsupported.",
+    "This result must not be described as a general-purpose baseline."
+  ],
+  "summary": {
+    "passed": 9,
+    "unsupported_syntax_error": 1
+  }
+}

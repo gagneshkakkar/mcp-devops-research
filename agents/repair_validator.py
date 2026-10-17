@@ -30,24 +30,100 @@ def validate_repair(
 ) -> dict:
     """
     Validate whether a proposed repair correctly addresses
-    the diagnosed CI/CD failure.
+    the reported CI/CD failure.
 
-    The validator receives the original implementation source
-    and failure evidence so that it can independently check
-    whether the proposed change makes sense.
+    The validator uses deterministic evidence first:
+
+    - failed test
+    - actual result
+    - expected result
+    - implementation source
+    - target file
+    - target function
+    - exact old code
+    - exact new code
+
+    The diagnosis is treated as supporting information only.
     """
 
     # --------------------------------------------------
-    # Validation prompt
+    # Basic deterministic checks
+    # --------------------------------------------------
+
+    if not file_path:
+        return {
+            "approved": False,
+            "reason": "Repair rejected: target file is missing."
+        }
+
+    if not function_name:
+        return {
+            "approved": False,
+            "reason": "Repair rejected: target function is missing."
+        }
+
+    if not old_code:
+        return {
+            "approved": False,
+            "reason": "Repair rejected: old_code is empty."
+        }
+
+    if not new_code:
+        return {
+            "approved": False,
+            "reason": "Repair rejected: new_code is empty."
+        }
+
+    if old_code == new_code:
+        return {
+            "approved": False,
+            "reason": "Repair rejected: old_code and new_code are identical."
+        }
+
+    # --------------------------------------------------
+    # Verify original code exists in implementation
+    # --------------------------------------------------
+
+    if implementation_source:
+
+        if old_code not in implementation_source:
+
+            return {
+                "approved": False,
+                "reason": (
+                    "Repair rejected: old_code does not exist "
+                    "in the supplied implementation source."
+                )
+            }
+
+    # --------------------------------------------------
+    # Strong validation prompt
     # --------------------------------------------------
 
     prompt = f"""
 You are a strict software repair validation agent.
 
-Your job is to determine whether a proposed code repair
-actually fixes the reported CI/CD failure.
+Your job is to determine whether the EXACT proposed code change
+correctly fixes the reported CI/CD failure.
 
-You MUST use the evidence provided below.
+IMPORTANT:
+
+The proposed patch itself is authoritative.
+
+Do NOT reject a correct patch merely because the diagnosis text
+is incomplete, vague, or incorrectly worded.
+
+The diagnosis is ONLY supporting context.
+
+The most important evidence is:
+
+1. Failed test
+2. Actual result
+3. Expected result
+4. Original implementation
+5. Target function
+6. OLD CODE
+7. NEW CODE
 
 ==================================================
 FAILED TEST
@@ -55,19 +131,17 @@ FAILED TEST
 
 {failed_test}
 
-Actual Result:
+==================================================
+ACTUAL RESULT
+==================================================
+
 {actual}
 
-Expected Result:
+==================================================
+EXPECTED RESULT
+==================================================
+
 {expected}
-
-
-==================================================
-DIAGNOSIS
-==================================================
-
-{diagnosis}
-
 
 ==================================================
 TARGET FILE
@@ -75,23 +149,35 @@ TARGET FILE
 
 {file_path}
 
-
 ==================================================
 TARGET FUNCTION
 ==================================================
 
 {function_name}
 
-
 ==================================================
-ORIGINAL IMPLEMENTATION SOURCE
+ORIGINAL IMPLEMENTATION
 ==================================================
 
 {implementation_source}
 
+==================================================
+DIAGNOSIS
+==================================================
+
+{diagnosis}
+
+IMPORTANT:
+
+The diagnosis may be wrong or poorly worded.
+
+Do NOT blindly trust the diagnosis.
+
+Independently compare the implementation and proposed patch
+with the actual and expected results.
 
 ==================================================
-PROPOSED CHANGE
+EXACT PROPOSED PATCH
 ==================================================
 
 OLD CODE:
@@ -100,87 +186,198 @@ OLD CODE:
 NEW CODE:
 {new_code}
 
-
 ==================================================
-VALIDATION RULES
-==================================================
-
-1. The proposed change must address the actual root cause
-   shown by the implementation source.
-
-2. The proposed change must explain the difference between
-   the actual result and expected result.
-
-3. The proposed change must be applied to the implementation,
-   not the test.
-
-4. The target function must be the function responsible for
-   the failure.
-
-5. Do not approve a repair merely because the new code looks
-   reasonable.
-
-6. Compare the old implementation with the expected behavior.
-
-7. If the diagnosis incorrectly blames the test while the
-   implementation clearly contradicts the expected behavior,
-   REJECT the repair.
-
-8. If the proposed repair changes test behavior, inputs,
-   expected values, or test assertions, REJECT it.
-
-9. The repair should be minimal.
-
-10. The repair must not introduce an obvious new defect.
-
-11. Return valid JSON only.
-
-12. Do not return markdown.
-
-13. Do not include explanations outside the JSON.
-
-==================================================
-IMPORTANT EXAMPLE
+VALIDATION PROCEDURE
 ==================================================
 
-If:
+Perform the following checks IN ORDER.
 
-divide(10, 2)
+CHECK 1:
+Does OLD CODE actually exist in the original implementation?
 
-returns:
+If no:
+REJECT.
 
+CHECK 2:
+Does the target function correspond to the failed behavior?
+
+If no:
+REJECT.
+
+CHECK 3:
+Does NEW CODE differ from OLD CODE?
+
+If no:
+REJECT.
+
+CHECK 4:
+Would replacing OLD CODE with NEW CODE move the implementation
+toward the EXPECTED RESULT?
+
+Use the actual failure evidence to determine this.
+
+CHECK 5:
+Does the patch modify the implementation rather than the test?
+
+If it modifies test assertions, expected values, test inputs,
+or test files, REJECT.
+
+CHECK 6:
+Is the proposed change minimal?
+
+A small correction to the faulty expression is preferred.
+
+CHECK 7:
+Does the proposed change introduce an obvious new defect?
+
+If yes:
+REJECT.
+
+==================================================
+CRITICAL EXAMPLE
+==================================================
+
+Suppose:
+
+FAILED TEST:
+test_divide
+
+Actual Result:
 20
 
-but the expected result is:
-
+Expected Result:
 5
 
-and the implementation contains:
+Original implementation:
 
+def divide(a, b):
+    return a * b
+
+Proposed patch:
+
+OLD CODE:
 return a * b
 
-then the implementation is incorrect.
-
-The correct repair is:
-
+NEW CODE:
 return a / b
 
-Do NOT modify the test.
+This is a VALID repair.
+
+APPROVE it.
+
+Do NOT reject it because the diagnosis text says something
+unclear or incorrect.
 
 ==================================================
+SECOND EXAMPLE
+==================================================
 
-Return exactly:
+Suppose:
+
+FAILED TEST:
+test_multiply
+
+Actual Result:
+7
+
+Expected Result:
+12
+
+Original implementation:
+
+def multiply(a, b):
+    return a + b
+
+Proposed patch:
+
+OLD CODE:
+return a + b
+
+NEW CODE:
+return a * b
+
+This is a VALID repair.
+
+APPROVE it.
+
+==================================================
+INVALID EXAMPLE
+==================================================
+
+Suppose:
+
+FAILED TEST:
+test_multiply
+
+Actual Result:
+7
+
+Expected Result:
+12
+
+Original implementation:
+
+def multiply(a, b):
+    return a + b
+
+Proposed patch:
+
+OLD CODE:
+return a + b
+
+NEW CODE:
+return 7
+
+This should normally be REJECTED because it hardcodes a result
+instead of correctly implementing multiplication.
+
+==================================================
+INVALID TEST MODIFICATION
+==================================================
+
+If the proposed patch changes:
+
+assert multiply(4, 3) == 12
+
+to:
+
+assert multiply(4, 3) == 7
+
+REJECT the repair.
+
+==================================================
+IMPORTANT DECISION RULE
+==================================================
+
+When diagnosis text conflicts with the actual implementation
+and proposed patch:
+
+TRUST THE ACTUAL IMPLEMENTATION + FAILURE EVIDENCE + PROPOSED PATCH.
+
+Do NOT blindly trust the diagnosis.
+
+==================================================
+OUTPUT
+==================================================
+
+Return valid JSON only.
+
+Do not return markdown.
+
+Do not include explanations outside JSON.
+
+Return exactly one of:
 
 {{
     "approved": true,
-    "reason": "short explanation based on the evidence"
+    "reason": "short evidence-based explanation"
 }}
 
 OR:
 
 {{
     "approved": false,
-    "reason": "short explanation of why the repair is invalid"
+    "reason": "short evidence-based explanation"
 }}
 """
 
@@ -195,7 +392,8 @@ OR:
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        temperature=0
     )
 
     content = response.choices[0].message.content.strip()
@@ -222,9 +420,7 @@ OR:
 
     try:
 
-        result = json.loads(
-            content
-        )
+        result = json.loads(content)
 
     except json.JSONDecodeError:
 
@@ -244,9 +440,7 @@ OR:
 
                 if i + 1 < len(content):
 
-                    next_character = content[
-                        i + 1
-                    ]
+                    next_character = content[i + 1]
 
                     valid_escapes = (
                         '"',
@@ -261,19 +455,14 @@ OR:
                     )
 
                     if next_character in valid_escapes:
-
                         repaired_content += "\\"
-
                     else:
-
                         repaired_content += "\\\\"
 
                 else:
-
                     repaired_content += "\\\\"
 
             else:
-
                 repaired_content += character
 
             i += 1
@@ -290,9 +479,7 @@ OR:
                 "\n========== RAW VALIDATOR RESPONSE =========="
             )
 
-            print(
-                content
-            )
+            print(content)
 
             raise ValueError(
                 "Validator returned invalid JSON "

@@ -1,4 +1,4 @@
-.venv/
+﻿.venv/
 __pycache__/
 *.pyc
 .env
@@ -10,3 +10,9 @@ chroma_db/
 *.zip
 
 run_*/
+
+# Generated benchmark workspaces
+benchmark/workspaces/
+benchmark/baseline_workspaces/
+benchmark/failures/*/broken/__pycache__/
+benchmark/failures/*/expected/__pycache__/

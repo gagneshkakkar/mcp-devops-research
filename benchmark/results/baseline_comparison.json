@@ -1,0 +1,56 @@
+{
+  "report_type": "baseline_comparison",
+  "generated_at_utc": "2026-10-15T08:48:53.029264+00:00",
+  "benchmark_cases": 10,
+  "experiments": [
+    {
+      "experiment": "Rule-based baseline",
+      "total_cases": 10,
+      "passed": 9,
+      "unsupported": 1,
+      "errors": 0,
+      "test_failed": 0,
+      "other_statuses": {},
+      "pass_rate_percent": 90.0,
+      "source_file": "baseline_rule_results.json"
+    },
+    {
+      "experiment": "Single-LLM baseline",
+      "model": "qwen2.5-coder:7b",
+      "total_cases": 10,
+      "passed": 7,
+      "unsupported": 0,
+      "errors": 2,
+      "test_failed": 1,
+      "other_statuses": {},
+      "pass_rate_percent": 70.0,
+      "source_file": "baseline_single_llm_results.json"
+    },
+    {
+      "experiment": "Proposed multi-agent system",
+      "total_cases": 10,
+      "passed": 9,
+      "unsupported": 1,
+      "errors": 0,
+      "test_failed": 0,
+      "other_statuses": {},
+      "pass_rate_percent": 90.0,
+      "strategy_counts": {
+        "llm_patch_pipeline": 7,
+        "llm_plus_dependency_cleanup": 1,
+        "fallback_assisted": 1,
+        "unsupported": 1,
+        "other_or_unknown": 0
+      },
+      "source_file": "evaluation_report.json"
+    }
+  ],
+  "limitations": [
+    "The benchmark contains only ten cases.",
+    "The rule-based rules are tailored to this benchmark and should not be treated as a general-purpose repair system.",
+    "The results are observed outcomes from saved runs, not averages over repeated trials.",
+    "The three approaches have different repair capabilities and failure handling, so pass rate alone does not explain their behavior.",
+    "The proposed-system result is taken from the saved evaluation report; no new repair experiment was run.",
+    "These results do not establish statistical significance or generalization to real-world CI failures."
+  ]
+}

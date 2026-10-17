@@ -783,7 +783,7 @@ async def run_autonomous_repair(
             f"`{diagnosis_result['run_id']}`.\n\n"
             "### Validation\n"
             f"- Diagnoses: {len(diagnoses)}\n"
-            f"- Successful repairs: {len(successful_repairs)}\n"
+            f"- Successful repairs: {successful_repairs}\n"
             "- Full test suite: **PASSED**\n"
             "- Repairs applied only to validated implementation targets\n"
             "- Changes committed on an isolated repair branch\n\n"

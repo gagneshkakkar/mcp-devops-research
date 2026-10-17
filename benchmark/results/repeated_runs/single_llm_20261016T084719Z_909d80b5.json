@@ -1,0 +1,325 @@
+{
+  "run_id": "909d80b5-b7ff-44bb-9c73-9ea84c4038ec",
+  "approach": "single_llm",
+  "started_at_utc": "2026-10-16T08:45:25.587077+00:00",
+  "completed_at_utc": "2026-10-16T08:47:19.963695+00:00",
+  "model_config": {
+    "provider": "Ollama OpenAI-compatible API",
+    "model": "qwen2.5-coder:7b",
+    "endpoint": "http://localhost:11434/v1",
+    "temperature": 0,
+    "max_retries": 0,
+    "llm_calls": 10
+  },
+  "dataset": {
+    "name": "custom_10_case_ci_failure_benchmark",
+    "case_count": 10,
+    "case_ids": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "F10"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "elapsed_seconds": 13.647181000000273,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 208,
+        "completion_tokens": 28,
+        "total_tokens": 236
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 13.635011700000177,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0036377999995238497,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "expected_output": 12,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "elapsed_seconds": 14.61567659999946,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 224,
+        "completion_tokens": 44,
+        "total_tokens": 268
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 14.607117499999731,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001878000000033353,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "elapsed_seconds": 11.075127999999495,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 205,
+        "completion_tokens": 33,
+        "total_tokens": 238
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 11.069347799999377,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.002117799999723502,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "elapsed_seconds": 12.415772900000775,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 217,
+        "completion_tokens": 37,
+        "total_tokens": 254
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 12.41063800000029,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.001732899999296933,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "elapsed_seconds": 7.045639300000403,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 198,
+        "completion_tokens": 21,
+        "total_tokens": 219
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 7.040912600000411,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0018558000001576147,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "expected_output": 4.0,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F06",
+      "title": "Syntax Error",
+      "status": "passed",
+      "elapsed_seconds": 6.377077000000099,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 198,
+        "completion_tokens": 19,
+        "total_tokens": 217
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 6.37140989999989,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.002338900000722788,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "elapsed_seconds": 9.734496699999909,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 209,
+        "completion_tokens": 29,
+        "total_tokens": 238
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 9.73003609999978,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0017692999999781023,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "expected_output": true,
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F08",
+      "title": "Missing Dependency",
+      "status": "error",
+      "elapsed_seconds": 9.177132599999823,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 201,
+        "completion_tokens": 27,
+        "total_tokens": 228
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 9.06003150000015,
+      "mcp_seconds": null,
+      "evaluation_seconds": null,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "ModuleNotFoundError: No module named 'benchmark_missing_package'"
+    },
+    {
+      "case_id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "test_failed",
+      "elapsed_seconds": 13.482589300000654,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 222,
+        "completion_tokens": 40,
+        "total_tokens": 262
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 13.478059599999142,
+      "mcp_seconds": null,
+      "evaluation_seconds": 0.0017100000004575122,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": null,
+      "behavior": {
+        "passed": false,
+        "actual_output": "incompatible",
+        "expected_output": "compatible",
+        "actual_exception": null
+      }
+    },
+    {
+      "case_id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "error",
+      "elapsed_seconds": 16.787485200000447,
+      "llm_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 203,
+        "completion_tokens": 50,
+        "total_tokens": 253
+      },
+      "retrieval_seconds": null,
+      "generation_seconds": 16.781024300000354,
+      "mcp_seconds": null,
+      "evaluation_seconds": null,
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "error": "OSError: Environment variable BENCHMARK_API_URL is not set"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "total_cases": 10,
+    "pass_rate_percent": 70.0,
+    "status_counts": {
+      "passed": 7,
+      "error": 2,
+      "test_failed": 1
+    },
+    "total_elapsed_seconds": 114.358179,
+    "total_generation_seconds": 114.183589,
+    "token_usage": {
+      "prompt_tokens": 2085,
+      "completion_tokens": 328,
+      "total_tokens": 2413,
+      "cases_with_reported_usage": 10
+    }
+  },
+  "limitations": [
+    "One direct local LLM call per case; no retries or fallbacks.",
+    "Each case starts from its original broken source.",
+    "Token usage is null when the API does not report it.",
+    "Elapsed time excludes process startup and model loading before the run.",
+    "Generated code is evaluated only against trusted benchmark cases."
+  ]
+}

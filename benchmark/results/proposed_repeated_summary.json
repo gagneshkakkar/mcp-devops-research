@@ -1,0 +1,267 @@
+{
+  "report_type": "proposed_system_repeatability",
+  "generated_at_utc": "2026-10-16T10:05:51.097969+00:00",
+  "approach": "Proposed multi-agent repair pipeline",
+  "number_of_runs": 3,
+  "dataset_case_count": 10,
+  "run_results": [
+    {
+      "filename": "proposed_20261016T092001Z_0b1b8aea.json",
+      "run_id": "0b1b8aea-dc46-4c92-9305-0c2c97d28a8b",
+      "started_at_utc": "2026-10-16T09:20:01.141633+00:00",
+      "completed_at_utc": "2026-10-16T09:31:58.635278+00:00",
+      "total_cases": 10,
+      "passed_cases": 9,
+      "pass_rate_percent": 90.0,
+      "total_case_elapsed_seconds": 716.97073,
+      "llm_calls_recorded": 9,
+      "outcome_counts": {
+        "passed": 9,
+        "unsupported_syntax_error": 1
+      }
+    },
+    {
+      "filename": "proposed_20261016T093627Z_7fd640b7.json",
+      "run_id": "7fd640b7-1f8e-47cd-87bd-9820a2fc59f8",
+      "started_at_utc": "2026-10-16T09:36:27.183320+00:00",
+      "completed_at_utc": "2026-10-16T09:48:26.669665+00:00",
+      "total_cases": 10,
+      "passed_cases": 9,
+      "pass_rate_percent": 90.0,
+      "total_case_elapsed_seconds": 719.368076,
+      "llm_calls_recorded": 9,
+      "outcome_counts": {
+        "passed": 9,
+        "unsupported_syntax_error": 1
+      }
+    },
+    {
+      "filename": "proposed_20261016T095146Z_70a3410a.json",
+      "run_id": "70a3410a-ee9f-444e-8ce9-e037acf72417",
+      "started_at_utc": "2026-10-16T09:51:46.251522+00:00",
+      "completed_at_utc": "2026-10-16T10:03:21.391358+00:00",
+      "total_cases": 10,
+      "passed_cases": 9,
+      "pass_rate_percent": 90.0,
+      "total_case_elapsed_seconds": 695.039492,
+      "llm_calls_recorded": 9,
+      "outcome_counts": {
+        "passed": 9,
+        "unsupported_syntax_error": 1
+      }
+    }
+  ],
+  "statistics": {
+    "pass_rate_percent": {
+      "mean": 90.0,
+      "median": 90.0,
+      "sample_standard_deviation": 0.0,
+      "observations": 3
+    },
+    "total_case_elapsed_seconds": {
+      "mean": 710.4594326666667,
+      "median": 716.97073,
+      "sample_standard_deviation": 13.407749422761793,
+      "observations": 3
+    },
+    "llm_calls_recorded": {
+      "mean": 9,
+      "median": 9,
+      "sample_standard_deviation": 0.0,
+      "observations": 3
+    }
+  },
+  "case_consistency": {
+    "cases_with_consistent_outcomes": 10,
+    "total_cases_compared": 10,
+    "all_cases_consistent": true,
+    "per_case": [
+      {
+        "case_id": "F01",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F02",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F03",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F04",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F05",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F06",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "unsupported_syntax_error"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "unsupported_syntax_error"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "unsupported_syntax_error"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F07",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F08",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F09",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      },
+      {
+        "case_id": "F10",
+        "outcomes": [
+          {
+            "run_file": "proposed_20261016T092001Z_0b1b8aea.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T093627Z_7fd640b7.json",
+            "outcome": "passed"
+          },
+          {
+            "run_file": "proposed_20261016T095146Z_70a3410a.json",
+            "outcome": "passed"
+          }
+        ],
+        "consistent_across_runs": true
+      }
+    ]
+  },
+  "measurement_notes": [
+    "Elapsed time is the sum of recorded per-case elapsed times; it may exclude process startup.",
+    "Token counts are unavailable from the current proposed pipeline and must not be interpreted as zero.",
+    "The recorded LLM call count reflects instrumented repair-generation function invocations, not necessarily every underlying model request.",
+    "Three repeated runs on a 10-case custom benchmark provide preliminary repeatability evidence, not proof of generalization to unseen repositories."
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "experiment": "single_llm_baseline",
+  "model": "qwen2.5-coder:7b",
+  "endpoint": "http://localhost:11434/v1",
+  "mode": "single_model_one_attempt",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "expected_output": 12,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "expected_output": 4.0,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "expected_output": 5,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "expected_output": true,
+        "actual_exception": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "error",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "llm_calls": 1,
+      "error": "ModuleNotFoundError: No module named 'benchmark_missing_package'"
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "error",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "llm_calls": 1,
+      "error": "RuntimeError: Simulated runtime incompatibility"
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "test_failed",
+      "repair_strategy": "single_llm_full_file",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_applied": true,
+      "tests_passed": false,
+      "llm_calls": 1,
+      "error": null,
+      "behavior": {
+        "passed": false,
+        "actual_output": "http://default.api.url",
+        "expected_output": "https://example.test/api",
+        "actual_exception": null
+      }
+    }
+  ],
+  "notes": [
+    "Uses one direct local LLM repair-generation call per case.",
+    "No multi-agent orchestration is used.",
+    "No retries or rule-based repair fallbacks are used.",
+    "Each case starts from its original broken source.",
+    "The expected output is used only for evaluation, not included in the model prompt.",
+    "Model-generated source is evaluated in a local benchmark workspace; use only trusted benchmark cases."
+  ],
+  "summary": {
+    "passed": 7,
+    "error": 2,
+    "test_failed": 1
+  },
+  "passed_cases": 7,
+  "observed_pass_rate_percent": 70.0
+}
