@@ -1,0 +1,507 @@
+{
+  "experiment": "autonomous_ci_repair_benchmark",
+  "mode": "isolated_repair",
+  "total_cases": 10,
+  "cases": [
+    {
+      "id": "F01",
+      "title": "Incorrect Arithmetic Logic",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F01/calculator.py",
+        "function": "multiply",
+        "reason": "Fixed arithmetic logic from addition to multiplication",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the addition operation to a multiplication operation, which correctly implements the expected result of 12 for the input (4, 3)."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F01\\calculator.py",
+        "function": "multiply",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145158_256907.py",
+        "old_code": "return a + b",
+        "new_code": "return a * b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 12,
+        "actual_exception": null,
+        "expected_output": 12,
+        "original_expected_exception": null
+      },
+      "case_id": "F01",
+      "llm_calls": 1,
+      "elapsed_seconds": 117.063246,
+      "generation_seconds": 82.990299,
+      "validation_seconds": 34.034569,
+      "application_seconds": 0.009557,
+      "evaluation_seconds": 0.002307,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F02",
+      "title": "Incorrect Division Logic",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F02/calculator.py",
+        "function": "divide",
+        "reason": "Incorrect division operator used",
+        "old_code": "return a * b",
+        "new_code": "return a / b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the multiplication operation to a division operation, which correctly fixes the incorrect division logic."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F02\\calculator.py",
+        "function": "divide",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145314_182140.py",
+        "old_code": "return a * b",
+        "new_code": "return a / b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5.0,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": null
+      },
+      "case_id": "F02",
+      "llm_calls": 1,
+      "elapsed_seconds": 75.58005,
+      "generation_seconds": 44.230444,
+      "validation_seconds": 31.316364,
+      "application_seconds": 0.003524,
+      "evaluation_seconds": 0.009723,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F03",
+      "title": "Undefined Variable",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F03/calculator.py",
+        "function": "add",
+        "reason": "Variable 'result' is undefined.",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces 'return result' with 'return a + b', which correctly implements the addition of two numbers and moves the implementation toward the expected result of 5."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F03\\calculator.py",
+        "function": "add",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145431_308787.py",
+        "old_code": "return result",
+        "new_code": "return a + b"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": "NameError"
+      },
+      "case_id": "F03",
+      "llm_calls": 1,
+      "elapsed_seconds": 77.07018,
+      "generation_seconds": 42.37226,
+      "validation_seconds": 34.683097,
+      "application_seconds": 0.002232,
+      "evaluation_seconds": 0.00311,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F04",
+      "title": "Wrong Function Name",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F04/calculator.py",
+        "function": "main",
+        "reason": "The function name is incorrect; it should be `calculate_sum`",
+        "old_code": "calculate_summ(2, 3)",
+        "new_code": "calculate_sum(2, 3)"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces 'calculate_summ(2, 3)' with 'calculate_sum(2, 3)', which corrects the function name and resolves the NameError."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F04\\calculator.py",
+        "function": "main",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145554_661423.py",
+        "old_code": "calculate_summ(2, 3)",
+        "new_code": "calculate_sum(2, 3)"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 5,
+        "actual_exception": null,
+        "expected_output": 5,
+        "original_expected_exception": "NameError"
+      },
+      "case_id": "F04",
+      "llm_calls": 1,
+      "elapsed_seconds": 83.346538,
+      "generation_seconds": 47.988551,
+      "validation_seconds": 35.343841,
+      "application_seconds": 0.001863,
+      "evaluation_seconds": 0.003777,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F05",
+      "title": "Missing Import",
+      "status": "passed",
+      "repair_strategy": "missing_import_fallback",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "module": "math",
+        "operation": "add_module_level_import"
+      },
+      "application": {
+        "success": true,
+        "message": "Added import math at module scope."
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 4.0,
+        "actual_exception": null,
+        "expected_output": 4.0,
+        "original_expected_exception": "NameError"
+      },
+      "case_id": "F05",
+      "llm_calls": 0,
+      "elapsed_seconds": 0.367996,
+      "generation_seconds": 0.0,
+      "validation_seconds": 0.0,
+      "application_seconds": 0.0,
+      "evaluation_seconds": 0.362163,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F06",
+      "title": "Syntax Error",
+      "status": "unsupported_syntax_error",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": false,
+      "repair_generated": false,
+      "repair_approved": false,
+      "repair_applied": false,
+      "tests_passed": false,
+      "error": "expected ':' (calculator.py, line 1)",
+      "case_id": "F06",
+      "llm_calls": 0,
+      "elapsed_seconds": 0.014347,
+      "generation_seconds": 0.0,
+      "validation_seconds": 0.0,
+      "application_seconds": 0.0,
+      "evaluation_seconds": 0.0,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F07",
+      "title": "Failed Assertion",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F07/calculator.py",
+        "function": "is_even",
+        "reason": "The current implementation checks if a number is odd (number % 2 == 1), but it should check if a number is even (number % 2 == 0).",
+        "old_code": "return number % 2 == 1",
+        "new_code": "return number % 2 == 0"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch changes the implementation from checking if a number is odd (number % 2 == 1) to checking if a number is even (number % 2 == 0), which is the expected behavior."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F07\\calculator.py",
+        "function": "is_even",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145729_251898.py",
+        "old_code": "return number % 2 == 1",
+        "new_code": "return number % 2 == 0"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": true,
+        "actual_exception": null,
+        "expected_output": true,
+        "original_expected_exception": null
+      },
+      "case_id": "F07",
+      "llm_calls": 1,
+      "elapsed_seconds": 94.18955,
+      "generation_seconds": 56.292245,
+      "validation_seconds": 37.882363,
+      "application_seconds": 0.003401,
+      "evaluation_seconds": 0.001674,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F08",
+      "title": "Missing Dependency",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F08/calculator.py",
+        "function": "calculate",
+        "reason": "Replace missing dependency with Python built-in",
+        "old_code": "return benchmark_missing_package.double(value)",
+        "new_code": "return value * 2"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch replaces the unavailable dependency with a Python built-in function, which moves the implementation toward the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F08\\calculator.py",
+        "function": "calculate",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_145847_883725.py",
+        "old_code": "return benchmark_missing_package.double(value)",
+        "new_code": "return value * 2"
+      },
+      "dependency_cleanup": {
+        "success": true,
+        "message": "Removed unused import: import benchmark_missing_package"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": 10,
+        "actual_exception": null,
+        "expected_output": 10,
+        "original_expected_exception": "ModuleNotFoundError"
+      },
+      "case_id": "F08",
+      "llm_calls": 1,
+      "elapsed_seconds": 78.641818,
+      "generation_seconds": 46.123801,
+      "validation_seconds": 32.486266,
+      "application_seconds": 0.002131,
+      "evaluation_seconds": 0.001408,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F09",
+      "title": "Python Runtime Compatibility",
+      "status": "passed",
+      "repair_strategy": "targeted_ast_runtime_fallback",
+      "repair_attempted": true,
+      "repair_generated": false,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": "Attempt 1: ValueError: Repair rejected: old_code was not found in the affected function.; Attempt 2: ValueError: Repair rejected: old_code was not found in the affected function.",
+      "fallback": {
+        "success": true,
+        "message": "Removed the AST-located simulated runtime incompatibility conditional and verified the function's expected return value."
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": "compatible",
+        "actual_exception": null,
+        "expected_output": "compatible",
+        "original_expected_exception": "RuntimeError"
+      },
+      "case_id": "F09",
+      "llm_calls": 2,
+      "elapsed_seconds": 108.044938,
+      "generation_seconds": 108.027999,
+      "validation_seconds": 0.0,
+      "application_seconds": 0.0,
+      "evaluation_seconds": 0.002754,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    },
+    {
+      "id": "F10",
+      "title": "Missing Environment Variable",
+      "status": "passed",
+      "repair_strategy": "llm_function_patch",
+      "repair_attempted": true,
+      "repair_generated": true,
+      "repair_approved": true,
+      "repair_applied": true,
+      "tests_passed": true,
+      "error": null,
+      "proposed_repair": {
+        "file": "D:/Research/mcp-devops-research/benchmark/baseline_workspaces/proposed_repeated/0b1b8aea-dc46-4c92-9305-0c2c97d28a8b/workspaces/F10/calculator.py",
+        "function": "get_api_url",
+        "reason": "Check if the environment variable is set before accessing it",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.environ.get(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "validation": {
+        "approved": true,
+        "reason": "The proposed patch correctly handles the missing environment variable by using os.environ.get with a default value, which aligns with the expected result."
+      },
+      "application": {
+        "success": true,
+        "message": "Repair applied successfully.",
+        "file": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\F10\\calculator.py",
+        "function": "get_api_url",
+        "backup": "D:\\Research\\mcp-devops-research\\benchmark\\baseline_workspaces\\proposed_repeated\\0b1b8aea-dc46-4c92-9305-0c2c97d28a8b\\workspaces\\.backups\\calculator_20261016_150158_607360.py",
+        "old_code": "return os.environ[\"BENCHMARK_API_URL\"]",
+        "new_code": "return os.environ.get(\"BENCHMARK_API_URL\", \"https://example.test/api\")"
+      },
+      "behavior": {
+        "passed": true,
+        "actual_output": "https://example.test/api",
+        "actual_exception": null,
+        "expected_output": "https://example.test/api",
+        "original_expected_exception": "KeyError"
+      },
+      "case_id": "F10",
+      "llm_calls": 1,
+      "elapsed_seconds": 82.652067,
+      "generation_seconds": 49.633717,
+      "validation_seconds": 32.994048,
+      "application_seconds": 0.003615,
+      "evaluation_seconds": 0.004116,
+      "token_usage": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      }
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "unsupported_syntax_error": 1
+  },
+  "run_id": "0b1b8aea-dc46-4c92-9305-0c2c97d28a8b",
+  "approach": "proposed_multi_agent_repair",
+  "started_at_utc": "2026-10-16T09:20:01.141633+00:00",
+  "completed_at_utc": "2026-10-16T09:31:58.635278+00:00",
+  "elapsed_seconds": 717.493022,
+  "model_config": {
+    "repair_model": "qwen2.5-coder:7b",
+    "validator_model": "qwen2.5-coder:7b",
+    "endpoint": "http://localhost:11434/v1",
+    "max_repair_generation_attempts_per_case": 2,
+    "temperature": "agent defaults"
+  },
+  "dataset": {
+    "name": "custom_10_case_ci_failure_benchmark",
+    "case_count": 10,
+    "case_ids": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "F10"
+    ]
+  },
+  "measurement_notes": [
+    "Each run uses a unique isolated workspace.",
+    "Generation, validation, application and evaluation timings are measured separately where those functions are called.",
+    "Per-case elapsed time begins immediately before workspace preparation; it is not identical to process wall-clock time.",
+    "Total elapsed time measures the runner's wall-clock duration.",
+    "Token usage is unavailable through the current agent interfaces.",
+    "The benchmark executes trusted, locally authored test cases.",
+    "This runner does not invoke the GitHub-connected orchestrator."
+  ]
+}

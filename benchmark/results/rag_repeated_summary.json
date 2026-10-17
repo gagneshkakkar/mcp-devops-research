@@ -1,0 +1,163 @@
+{
+  "experiment": "Repeated LLM + Semantic RAG Evaluation",
+  "approach": "llm_rag",
+  "number_of_runs": 3,
+  "run_files": [
+    "llm_rag_20261016T090017Z_7e546eeb.json",
+    "llm_rag_20261016T090407Z_fd12db5d.json",
+    "llm_rag_20261016T090726Z_4ab30712.json"
+  ],
+  "configuration": {
+    "model": "qwen2.5-coder:7b",
+    "embedding_model": "nomic-embed-text",
+    "top_k": 3,
+    "dataset": "custom_10_case_ci_failure_benchmark"
+  },
+  "metrics": {
+    "pass_rate_percent": {
+      "mean": 70.0,
+      "median": 70.0,
+      "sample_standard_deviation": 0.0,
+      "minimum": 70.0,
+      "maximum": 70.0,
+      "observations": 3
+    },
+    "total_per_case_elapsed_seconds": {
+      "mean": 188.354994,
+      "median": 152.208167,
+      "sample_standard_deviation": 63.358322,
+      "minimum": 151.343635,
+      "maximum": 261.51318,
+      "observations": 3
+    },
+    "total_retrieval_seconds": {
+      "mean": 48.637129,
+      "median": 46.433148,
+      "sample_standard_deviation": 3.843164,
+      "minimum": 46.403439,
+      "maximum": 53.074799,
+      "observations": 3
+    },
+    "total_generation_seconds": {
+      "mean": 139.469698,
+      "median": 105.596437,
+      "sample_standard_deviation": 59.380995,
+      "minimum": 104.777323,
+      "maximum": 208.035334,
+      "observations": 3
+    },
+    "corpus_load_seconds": {
+      "mean": 0.028355,
+      "median": 0.025937,
+      "sample_standard_deviation": 0.013069,
+      "minimum": 0.016663,
+      "maximum": 0.042464,
+      "observations": 3
+    },
+    "prompt_tokens": {
+      "mean": 5734,
+      "median": 5734,
+      "sample_standard_deviation": 0.0,
+      "minimum": 5734,
+      "maximum": 5734,
+      "observations": 3
+    },
+    "completion_tokens": {
+      "mean": 290,
+      "median": 290,
+      "sample_standard_deviation": 0.0,
+      "minimum": 290,
+      "maximum": 290,
+      "observations": 3
+    },
+    "total_tokens": {
+      "mean": 6024,
+      "median": 6024,
+      "sample_standard_deviation": 0.0,
+      "minimum": 6024,
+      "maximum": 6024,
+      "observations": 3
+    }
+  },
+  "per_case_outcomes": {
+    "F01": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F02": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F03": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F04": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F05": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F06": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F07": {
+      "status_counts": {
+        "passed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F08": {
+      "status_counts": {
+        "error": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F09": {
+      "status_counts": {
+        "test_failed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    },
+    "F10": {
+      "status_counts": {
+        "test_failed": 3
+      },
+      "consistent_across_runs": true,
+      "runs_observed": 3
+    }
+  },
+  "limitations": [
+    "The benchmark contains ten custom cases.",
+    "Three repetitions do not establish broad generalizability.",
+    "Latency may vary with model warm-up, caching, and system load.",
+    "Elapsed time is the sum of per-case elapsed times, not full process wall-clock time.",
+    "Corpus loading is measured separately from per-case retrieval.",
+    "Token counts are included only when reported by the API.",
+    "Pass rate measures the benchmark's behavioral check, not production readiness."
+  ]
+}

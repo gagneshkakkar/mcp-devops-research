@@ -41,7 +41,7 @@
       "cases": 10,
       "passed": 7,
       "pass_rate_percent": 70.0,
-      "limitation": "Excludes each target case from retrieval. The observed result comes from one 10-case run and does not establish statistical significance or generalization to unseen projects."
+      "limitation": "Excludes each target case from retrieval. The remaining corpus is still drawn from the same 10-case benchmark."
     },
     {
       "approach": "Proposed multi-agent repair pipeline",
@@ -208,13 +208,500 @@
         }
       }
     ],
-    "interpretation": "A separate instrumented repeat of the semantic RAG approach. It is reported as a repeat run, not as a new approach or an independent baseline.",
+    "interpretation": "A separate instrumented run of the semantic RAG approach. It is reported as a repeat run, not as a new approach or an independent baseline.",
     "limitations": [
       "The result is from one run on the custom 10-case dataset.",
       "The original RAG retrieval corpus allows target-case self-retrieval.",
       "Token usage depends on what the local model endpoint reports.",
       "Elapsed time depends on local hardware and system load.",
       "The observed pass rate does not establish statistical significance or generalization to unseen projects."
+    ]
+  },
+  "repeated_run_statistics": {
+    "title": "Repeated-Run Evaluation",
+    "dataset_size": 10,
+    "number_of_runs_per_approach": 3,
+    "approaches": [
+      {
+        "approach": "Rule-based",
+        "summary_file": "rule_based_repeated_summary.json",
+        "run_count": 3,
+        "run_ids": [
+          "099685ee-3b07-4057-a4cf-7fa7a805e9b2",
+          "836bf7de-1e17-41b6-b3fc-6ac48f112a73",
+          "f4b2ac25-137d-423f-ae7c-6ec63776cea8"
+        ],
+        "pass_rate": {
+          "count": 3,
+          "mean": 90.0,
+          "median": 90.0,
+          "sample_standard_deviation": 0.0
+        },
+        "latency_metric": "total_case_elapsed_seconds_per_run",
+        "latency": {
+          "count": 3,
+          "mean": 0.115221,
+          "median": 0.118926,
+          "sample_standard_deviation": 0.059158
+        },
+        "generation_latency": null,
+        "retrieval_latency": null,
+        "token_usage": null,
+        "per_case": {
+          "F01": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.013061,
+              "median": 0.011,
+              "sample_standard_deviation": 0.007306
+            }
+          },
+          "F02": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.010133,
+              "median": 0.011228,
+              "sample_standard_deviation": 0.003437
+            }
+          },
+          "F03": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.009563,
+              "median": 0.009821,
+              "sample_standard_deviation": 0.004247
+            }
+          },
+          "F04": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.012099,
+              "median": 0.013934,
+              "sample_standard_deviation": 0.006842
+            }
+          },
+          "F05": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.009607,
+              "median": 0.011201,
+              "sample_standard_deviation": 0.003482
+            }
+          },
+          "F06": {
+            "status_counts": {
+              "unsupported_syntax_error": 3
+            },
+            "passed_in_all_runs": false,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.006621,
+              "median": 0.006133,
+              "sample_standard_deviation": 0.001371
+            }
+          },
+          "F07": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.016424,
+              "median": 0.011242,
+              "sample_standard_deviation": 0.014012
+            }
+          },
+          "F08": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.015031,
+              "median": 0.013797,
+              "sample_standard_deviation": 0.01184
+            }
+          },
+          "F09": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.013874,
+              "median": 0.012138,
+              "sample_standard_deviation": 0.008574
+            }
+          },
+          "F10": {
+            "status_counts": {
+              "passed": 3
+            },
+            "passed_in_all_runs": true,
+            "elapsed_seconds": {
+              "count": 3,
+              "mean": 0.008809,
+              "median": 0.009871,
+              "sample_standard_deviation": 0.004163
+            }
+          }
+        }
+      },
+      {
+        "approach": "Single LLM",
+        "summary_file": "single_llm_repeated_summary.json",
+        "run_count": 3,
+        "run_ids": [
+          "30f8c3ab-e135-417c-a08d-a427f76e3568",
+          "909d80b5-b7ff-44bb-9c73-9ea84c4038ec",
+          "9e29c767-55b4-420a-9994-037352b07a90"
+        ],
+        "pass_rate": {
+          "count": 3,
+          "mean": 70.0,
+          "median": 70.0,
+          "sample_standard_deviation": 0.0
+        },
+        "latency_metric": "total_case_elapsed_seconds_per_run",
+        "latency": {
+          "count": 3,
+          "mean": 138.099718,
+          "median": 114.358179,
+          "sample_standard_deviation": 41.878103
+        },
+        "generation_latency": {
+          "count": 3,
+          "mean": 137.936383,
+          "median": 114.183589,
+          "sample_standard_deviation": 41.80082
+        },
+        "retrieval_latency": null,
+        "token_usage": {
+          "count": 3,
+          "mean": 2413,
+          "median": 2413,
+          "sample_standard_deviation": 0.0
+        },
+        "per_case": {
+          "F01": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F02": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F03": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F04": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F05": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F06": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F07": {
+            "status_counts": {
+              "passed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": true
+          },
+          "F08": {
+            "status_counts": {
+              "error": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": false
+          },
+          "F09": {
+            "status_counts": {
+              "test_failed": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": false
+          },
+          "F10": {
+            "status_counts": {
+              "error": 3
+            },
+            "same_outcome_in_all_runs": true,
+            "passed_in_all_runs": false
+          }
+        }
+      },
+      {
+        "approach": "LLM + Semantic RAG",
+        "summary_file": "rag_repeated_summary.json",
+        "run_count": 3,
+        "run_ids": [
+          "llm_rag_20261016T090017Z_7e546eeb.json",
+          "llm_rag_20261016T090407Z_fd12db5d.json",
+          "llm_rag_20261016T090726Z_4ab30712.json"
+        ],
+        "pass_rate": {
+          "mean": 70.0,
+          "median": 70.0,
+          "sample_standard_deviation": 0.0,
+          "minimum": 70.0,
+          "maximum": 70.0,
+          "observations": 3
+        },
+        "latency_metric": "total_per_case_elapsed_seconds",
+        "latency": {
+          "mean": 188.354994,
+          "median": 152.208167,
+          "sample_standard_deviation": 63.358322,
+          "minimum": 151.343635,
+          "maximum": 261.51318,
+          "observations": 3
+        },
+        "generation_latency": {
+          "mean": 139.469698,
+          "median": 105.596437,
+          "sample_standard_deviation": 59.380995,
+          "minimum": 104.777323,
+          "maximum": 208.035334,
+          "observations": 3
+        },
+        "retrieval_latency": {
+          "mean": 48.637129,
+          "median": 46.433148,
+          "sample_standard_deviation": 3.843164,
+          "minimum": 46.403439,
+          "maximum": 53.074799,
+          "observations": 3
+        },
+        "token_usage": {
+          "mean": 6024,
+          "median": 6024,
+          "sample_standard_deviation": 0.0,
+          "minimum": 6024,
+          "maximum": 6024,
+          "observations": 3
+        },
+        "per_case": {
+          "F01": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F02": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F03": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F04": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F05": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F06": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F07": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F08": {
+            "status_counts": {
+              "error": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F09": {
+            "status_counts": {
+              "test_failed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          },
+          "F10": {
+            "status_counts": {
+              "test_failed": 3
+            },
+            "consistent_across_runs": true,
+            "runs_observed": 3
+          }
+        }
+      },
+      {
+        "approach": "Proposed multi-agent repair pipeline",
+        "summary_file": "proposed_repeated_summary.json",
+        "run_count": 3,
+        "run_ids": [
+          "proposed_20261016T092001Z_0b1b8aea.json",
+          "proposed_20261016T093627Z_7fd640b7.json",
+          "proposed_20261016T095146Z_70a3410a.json"
+        ],
+        "pass_rate": {
+          "mean": 90.0,
+          "median": 90.0,
+          "sample_standard_deviation": 0.0,
+          "observations": 3
+        },
+        "latency_metric": "total_case_elapsed_seconds_per_run",
+        "latency": {
+          "mean": 710.4594326666667,
+          "median": 716.97073,
+          "sample_standard_deviation": 13.407749422761793,
+          "observations": 3
+        },
+        "generation_latency": null,
+        "retrieval_latency": null,
+        "token_usage": null,
+        "per_case": {
+          "F01": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F02": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F03": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F04": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F05": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F06": {
+            "status_counts": {
+              "unsupported_syntax_error": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F07": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F08": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F09": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          },
+          "F10": {
+            "status_counts": {
+              "passed": 3
+            },
+            "consistent_across_runs": true
+          }
+        }
+      }
+    ],
+    "interpretation": "These statistics summarize three repetitions of each approach on the same custom 10-case benchmark. They describe observed repeatability on this dataset and do not establish generalization or statistical significance.",
+    "limitations": [
+      "Only three repetitions per approach are included.",
+      "The same custom 10-case benchmark and local machine are used.",
+      "Repeated runs are not independent hardware trials.",
+      "Pass-rate standard deviation describes variation across three observed run-level pass rates.",
+      "Timing values are sums of per-case measurements, not full process wall-clock time.",
+      "Rule-based timing excludes process startup and is not directly comparable to LLM generation latency alone.",
+      "RAG corpus loading is reported separately from per-case retrieval and elapsed time.",
+      "The RAG corpus is not an unseen-project test set.",
+      "Token counts depend on the local endpoint's usage reporting.",
+      "Token usage was not exposed by the proposed repair pipeline and is reported as unavailable, not zero."
     ]
   },
   "targeted_follow_up": {

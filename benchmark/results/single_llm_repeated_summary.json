@@ -1,0 +1,153 @@
+{
+  "approach": "single_llm",
+  "model": "qwen2.5-coder:7b",
+  "run_count": 3,
+  "run_ids": [
+    "30f8c3ab-e135-417c-a08d-a427f76e3568",
+    "909d80b5-b7ff-44bb-9c73-9ea84c4038ec",
+    "9e29c767-55b4-420a-9994-037352b07a90"
+  ],
+  "pass_rate_percent": {
+    "count": 3,
+    "mean": 70.0,
+    "median": 70.0,
+    "sample_standard_deviation": 0.0
+  },
+  "generation_seconds_per_run": {
+    "count": 3,
+    "mean": 137.936383,
+    "median": 114.183589,
+    "sample_standard_deviation": 41.80082
+  },
+  "total_case_elapsed_seconds_per_run": {
+    "count": 3,
+    "mean": 138.099718,
+    "median": 114.358179,
+    "sample_standard_deviation": 41.878103
+  },
+  "total_tokens_per_run": {
+    "count": 3,
+    "mean": 2413,
+    "median": 2413,
+    "sample_standard_deviation": 0.0
+  },
+  "all_runs_reported_token_usage": true,
+  "per_run": [
+    {
+      "run_id": "30f8c3ab-e135-417c-a08d-a427f76e3568",
+      "pass_rate_percent": 70.0,
+      "generation_seconds": 186.201818,
+      "total_case_elapsed_seconds": 186.453772,
+      "total_tokens": 2413,
+      "status_counts": {
+        "passed": 7,
+        "error": 2,
+        "test_failed": 1
+      }
+    },
+    {
+      "run_id": "909d80b5-b7ff-44bb-9c73-9ea84c4038ec",
+      "pass_rate_percent": 70.0,
+      "generation_seconds": 114.183589,
+      "total_case_elapsed_seconds": 114.358179,
+      "total_tokens": 2413,
+      "status_counts": {
+        "passed": 7,
+        "error": 2,
+        "test_failed": 1
+      }
+    },
+    {
+      "run_id": "9e29c767-55b4-420a-9994-037352b07a90",
+      "pass_rate_percent": 70.0,
+      "generation_seconds": 113.423742,
+      "total_case_elapsed_seconds": 113.487203,
+      "total_tokens": 2413,
+      "status_counts": {
+        "passed": 7,
+        "error": 2,
+        "test_failed": 1
+      }
+    }
+  ],
+  "per_case": {
+    "F01": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F02": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F03": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F04": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F05": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F06": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F07": {
+      "status_counts": {
+        "passed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": true
+    },
+    "F08": {
+      "status_counts": {
+        "error": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": false
+    },
+    "F09": {
+      "status_counts": {
+        "test_failed": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": false
+    },
+    "F10": {
+      "status_counts": {
+        "error": 3
+      },
+      "same_outcome_in_all_runs": true,
+      "passed_in_all_runs": false
+    }
+  },
+  "limitations": [
+    "Results cover a custom 10-case benchmark.",
+    "Only three repeated runs are included.",
+    "The same local machine and model configuration were used.",
+    "Generation time is the sum of per-case API-call durations, not full experiment wall-clock time.",
+    "Local model warm-up, caching, and system load may affect latency.",
+    "Token counts are reported by the local API and may not be comparable to other providers."
+  ]
+}
