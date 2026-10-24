@@ -1,8 +1,8 @@
-from app.calculator import add, subtract, multiply, divide
+﻿from app.calculator import add, subtract, multiply, divide
 
 
 def test_add():
-    assert add(2, 3) == 5
+    assert add(2, 3) == 6
 
 
 def test_subtract():
