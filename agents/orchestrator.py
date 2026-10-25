@@ -465,6 +465,34 @@ async def run_autonomous_repair(
             "No diagnoses were returned by the diagnosis agent."
         )
 
+    # --------------------------------------------------
+    # SAFETY GATE
+    # --------------------------------------------------
+    review_required = [
+        diagnosis
+        for diagnosis in diagnoses
+        if diagnosis.get("review_status") != "READY_FOR_VALIDATION"
+    ]
+
+    if review_required:
+        print(
+            "\nReview required. Autonomous repair aborted "
+            "before branch creation."
+        )
+
+        return {
+            "run_id": diagnosis_result.get("run_id", run_id),
+            "repair_branch": None,
+            "diagnoses": diagnoses,
+            "repair_results": [],
+            "successful_repairs": 0,
+            "total_diagnoses": len(diagnoses),
+            "final_tests_passed": False,
+            "final_test_output": "",
+            "overall_success": False,
+            "review_required": True,
+        }
+
     print(
         f"\nTotal diagnoses received: "
         f"{len(diagnoses)}"
@@ -684,7 +712,8 @@ async def run_autonomous_repair(
             "total_diagnoses": total_diagnoses,
             "final_tests_passed": False,
             "final_test_output": "",
-            "overall_success": False
+            "overall_success": False,
+            "rollback_success": rollback_success
         }
 
     # --------------------------------------------------
@@ -879,7 +908,10 @@ async def run_autonomous_repair(
         "total_diagnoses": total_diagnoses,
         "final_tests_passed": final_tests_passed,
         "final_test_output": final_test_output,
-        "overall_success": overall_success
+        "overall_success": overall_success,
+        "rollback_success": (
+            rollback_success if not final_tests_passed else None
+        )
     }
 
 

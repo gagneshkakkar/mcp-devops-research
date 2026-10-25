@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from pathlib import Path
 
@@ -27,7 +28,8 @@ server_params = StdioServerParameters(
     args=[
         "-m",
         "mcp_server.server"
-    ]
+    ],
+    env=os.environ.copy(),
 )
 
 
@@ -540,6 +542,20 @@ def validate_diagnosis_targets(
                 f"{expected['functions']}"
             )
 
+    # Fail closed on missing or invalid review decisions.
+    # READY_FOR_VALIDATION permits a repair attempt, not approval
+    # of the proposed patch or its final correctness.
+    allowed_statuses = {
+        "READY_FOR_VALIDATION",
+        "REVIEW_REQUIRED",
+    }
+
+    for item in diagnoses:
+        status = item.get("review_status")
+
+        if status not in allowed_statuses:
+            item["review_status"] = "REVIEW_REQUIRED"
+
     return diagnosis
 
 
@@ -695,7 +711,7 @@ def locate_implementation_targets(
         return []
 
     source = test_file.read_text(
-        encoding="utf-8"
+        encoding="utf-8-sig"
     )
 
     tree = ast.parse(
@@ -1026,6 +1042,13 @@ Do NOT invent a different implementation file.
 
 Do NOT invent a different implementation function.
 
+Set review_status to READY_FOR_VALIDATION only when the supplied
+source and failure evidence support a specific implementation defect.
+If the test expectation may be wrong, evidence is incomplete, or the
+root cause is uncertain, set review_status to REVIEW_REQUIRED.
+A READY_FOR_VALIDATION decision permits an attempt only; later repair
+validation and the full test suite must still succeed.
+
 Return JSON only.
 
 ==================================================
@@ -1089,7 +1112,8 @@ Return exactly:
             "root_cause": "specific root cause",
             "file": "implementation file",
             "function": "implementation function",
-            "recommended_fix": "specific code change"
+            "recommended_fix": "specific code change",
+            "review_status": "READY_FOR_VALIDATION or REVIEW_REQUIRED"
         }}
     ]
 }}
