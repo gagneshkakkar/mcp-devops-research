@@ -386,14 +386,20 @@ IMPORTANT RULES:
    absolutely necessary.
 10. old_code and new_code should normally be
     a single line.
-11. Do not include markdown.
-12. Use forward slashes in the JSON file path.
-13. Do not include extra text before or after JSON.
-14. old_code must exist exactly in the supplied
+11. Follow the syntax of the source language.
+    This target file is Python, so use valid Python syntax.
+12. Copy old_code character-for-character from the
+    supplied source, including punctuation.
+13. Do NOT add semicolons unless they already exist
+    in the original source fragment.
+14. Do not include markdown.
+15. Use forward slashes in the JSON file path.
+16. Do not include extra text before or after JSON.
+17. old_code must exist exactly in the supplied
     affected function source.
-15. new_code must fix the diagnosed problem.
-16. Do not change function names or signatures.
-17. Do not modify unrelated statements.
+18. new_code must fix the diagnosed problem.
+19. Do not change function names or signatures.
+20. Do not modify unrelated statements.
 
 TARGET FILE:
 {file_path}

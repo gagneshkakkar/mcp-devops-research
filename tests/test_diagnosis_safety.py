@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 
 from agents import orchestrator
 
@@ -124,8 +124,23 @@ async def test_branch_creation_failure_stops_before_repair_or_publication(monkey
         return {
             "run_id": 123,
             "diagnosis": {"diagnoses": [diagnosis]},
-            "failure_contexts": [],
-            "implementation_source": {},
+            "failure_contexts": [
+                {
+                    "test": diagnosis["test"],
+                    "implementation_targets": [
+                        {
+                            "file": diagnosis["file"],
+                            "function": diagnosis["function"],
+                        }
+                    ],
+                }
+            ],
+            "implementation_source": {
+                diagnosis["file"]: (
+                    "def add(a, b):\n    return a + b\n\n"
+                    "def subtract(a, b):\n    return a - b\n"
+                )
+            },
         }
 
     def fail_branch_creation(run_id):
@@ -206,8 +221,23 @@ async def test_final_validation_failure_reports_rollback_and_never_publishes(
         return {
             "run_id": 123,
             "diagnosis": {"diagnoses": [diagnosis]},
-            "failure_contexts": [],
-            "implementation_source": {},
+            "failure_contexts": [
+                {
+                    "test": diagnosis["test"],
+                    "implementation_targets": [
+                        {
+                            "file": diagnosis["file"],
+                            "function": diagnosis["function"],
+                        }
+                    ],
+                }
+            ],
+            "implementation_source": {
+                diagnosis["file"]: (
+                    "def add(a, b):\n    return a + b\n\n"
+                    "def subtract(a, b):\n    return a - b\n"
+                )
+            },
         }
 
     def fake_process_diagnosis(diagnosis, implementation_source):
@@ -255,6 +285,9 @@ async def test_final_validation_failure_reports_rollback_and_never_publishes(
     assert len(rollback_calls) == 1
     assert result["rollback_success"] is rollback_result
 
+
+
+
 @pytest.mark.anyio
 async def test_commit_failure_stops_push_and_pull_request(monkeypatch):
     diagnosis = {
@@ -272,8 +305,23 @@ async def test_commit_failure_stops_push_and_pull_request(monkeypatch):
         return {
             "run_id": 123,
             "diagnosis": {"diagnoses": [diagnosis]},
-            "failure_contexts": [],
-            "implementation_source": {},
+            "failure_contexts": [
+                {
+                    "test": diagnosis["test"],
+                    "implementation_targets": [
+                        {
+                            "file": diagnosis["file"],
+                            "function": diagnosis["function"],
+                        }
+                    ],
+                }
+            ],
+            "implementation_source": {
+                diagnosis["file"]: (
+                    "def add(a, b):\n    return a + b\n\n"
+                    "def subtract(a, b):\n    return a - b\n"
+                )
+            },
         }
 
     def fake_process_diagnosis(diagnosis, implementation_source):
@@ -285,7 +333,7 @@ async def test_commit_failure_stops_push_and_pull_request(monkeypatch):
             "backup": "mock-backup",
         }
 
-    def fail_commit(message):
+    def fail_commit(message, files=None):
         raise RuntimeError("simulated commit failure")
 
     def forbidden_action(*args, **kwargs):
@@ -293,7 +341,8 @@ async def test_commit_failure_stops_push_and_pull_request(monkeypatch):
 
     monkeypatch.setattr(orchestrator, "diagnose_run", fake_diagnose_run)
     monkeypatch.setattr(
-        orchestrator, "create_repair_branch", lambda run_id: "test-repair-branch"
+        orchestrator, "create_repair_branch",
+        lambda run_id: "test-repair-branch",
     )
     monkeypatch.setattr(
         orchestrator, "process_diagnosis", fake_process_diagnosis
@@ -303,10 +352,101 @@ async def test_commit_failure_stops_push_and_pull_request(monkeypatch):
     )
     monkeypatch.setattr(orchestrator, "commit_changes", fail_commit)
     monkeypatch.setattr(orchestrator, "push_branch", forbidden_action)
-    monkeypatch.setattr(orchestrator, "create_pull_request", forbidden_action)
+    monkeypatch.setattr(
+        orchestrator, "create_pull_request", forbidden_action
+    )
 
-    with pytest.raises(RuntimeError, match="simulated commit failure"):
-        await orchestrator.run_autonomous_repair(123)
+    result = await orchestrator.run_autonomous_repair(123)
+
+    assert result["publication_status"] == "FAILED"
+    assert result["publication_error"] == (
+        "Publication failed during COMMITTING: RuntimeError"
+    )
+    assert result["overall_success"] is False
+    assert result["pull_request"] is None
+
+
+@pytest.mark.anyio
+async def test_push_failure_stops_pull_request(monkeypatch):
+    diagnosis = {
+        "test": "tests/test_project.py::test_add",
+        "file": "app/calculator.py",
+        "function": "add",
+        "actual": "5",
+        "expected": "6",
+        "root_cause": "Simulated implementation defect.",
+        "recommended_fix": "Correct the implementation.",
+        "review_status": "READY_FOR_VALIDATION",
+    }
+
+    async def fake_diagnose_run(run_id=None):
+        return {
+            "run_id": 123,
+            "diagnosis": {"diagnoses": [diagnosis]},
+            "failure_contexts": [
+                {
+                    "test": diagnosis["test"],
+                    "implementation_targets": [
+                        {
+                            "file": diagnosis["file"],
+                            "function": diagnosis["function"],
+                        }
+                    ],
+                }
+            ],
+            "implementation_source": {
+                diagnosis["file"]: (
+                    "def add(a, b):\n    return a + b\n\n"
+                    "def subtract(a, b):\n    return a - b\n"
+                )
+            },
+        }
+
+    def fake_process_diagnosis(diagnosis, implementation_source):
+        return {
+            "success": True,
+            "test": diagnosis["test"],
+            "file": diagnosis["file"],
+            "function": diagnosis["function"],
+            "backup": "mock-backup",
+        }
+
+    def fake_push(branch):
+        raise RuntimeError("simulated push failure")
+
+    def forbidden_pr(*args, **kwargs):
+        pytest.fail("Pull-request creation ran after push failure")
+
+    monkeypatch.setattr(orchestrator, "diagnose_run", fake_diagnose_run)
+    monkeypatch.setattr(
+        orchestrator, "create_repair_branch",
+        lambda run_id: "test-repair-branch",
+    )
+    monkeypatch.setattr(
+        orchestrator, "process_diagnosis", fake_process_diagnosis
+    )
+    monkeypatch.setattr(
+        orchestrator, "run_tests", lambda: (True, "all tests passed")
+    )
+    monkeypatch.setattr(
+        orchestrator, "commit_changes",
+        lambda message, files=None: "mock-commit",
+    )
+    monkeypatch.setattr(orchestrator, "push_branch", fake_push)
+    monkeypatch.setattr(
+        orchestrator, "create_pull_request", forbidden_pr
+    )
+
+    result = await orchestrator.run_autonomous_repair(123)
+
+    assert result["publication_status"] == "FAILED"
+    assert result["publication_error"] == (
+        "Publication failed during PUSHING: RuntimeError"
+    )
+    assert result["overall_success"] is False
+    assert result["pull_request"] is None
+
+
 
 def test_rollback_repair_restores_original_file(tmp_path):
     target = tmp_path / "calculator.py"
@@ -345,3 +485,92 @@ def test_rollback_all_repairs_uses_reverse_order(monkeypatch):
     assert rollback_order == ["third.py", "second.py", "first.py"]
 
 
+
+@pytest.mark.anyio
+async def test_publication_stages_only_unique_successful_repair_files(monkeypatch):
+    diagnoses = [
+        {
+            "test": "tests/test_project.py::test_add",
+            "file": "app/calculator.py",
+            "function": "add",
+            "actual": "5",
+            "expected": "6",
+            "root_cause": "Simulated defect.",
+            "recommended_fix": "Correct implementation.",
+            "review_status": "READY_FOR_VALIDATION",
+        },
+        {
+            "test": "tests/test_project.py::test_subtract",
+            "file": "app/calculator.py",
+            "function": "subtract",
+            "actual": "1",
+            "expected": "2",
+            "root_cause": "Simulated defect.",
+            "recommended_fix": "Correct implementation.",
+            "review_status": "READY_FOR_VALIDATION",
+        },
+    ]
+
+    async def fake_diagnose_run(run_id=None):
+        return {
+            "run_id": 123,
+            "diagnosis": {"diagnoses": diagnoses},
+            "failure_contexts": [
+                {
+                    "test": diagnosis["test"],
+                    "implementation_targets": [
+                        {
+                            "file": diagnosis["file"],
+                            "function": diagnosis["function"],
+                        }
+                    ],
+                }
+                for diagnosis in diagnoses
+            ],
+            "implementation_source": {
+                "app/calculator.py": (
+                    "def add(a, b):\n    return a + b\n\n"
+                    "def subtract(a, b):\n    return a - b\n"
+                )
+            },
+        }
+
+    def fake_process_diagnosis(diagnosis, implementation_source):
+        return {
+            "success": True,
+            "test": diagnosis["test"],
+            "file": diagnosis["file"],
+            "function": diagnosis["function"],
+            "backup": "mock-backup",
+        }
+
+    captured = {}
+
+    def fake_commit(message, files=None):
+        captured["message"] = message
+        captured["files"] = files
+        return "mock commit"
+
+    monkeypatch.setattr(orchestrator, "diagnose_run", fake_diagnose_run)
+    monkeypatch.setattr(
+        orchestrator, "create_repair_branch", lambda run_id: "test-repair-branch"
+    )
+    monkeypatch.setattr(
+        orchestrator, "process_diagnosis", fake_process_diagnosis
+    )
+    monkeypatch.setattr(
+        orchestrator, "run_tests", lambda: (True, "all tests passed")
+    )
+    monkeypatch.setattr(orchestrator, "commit_changes", fake_commit)
+    monkeypatch.setattr(
+        orchestrator, "push_branch", lambda branch: "mock push"
+    )
+    monkeypatch.setattr(
+        orchestrator,
+        "create_pull_request",
+        lambda **kwargs: {"number": 999, "url": "https://example.invalid/pr/999"},
+    )
+
+    await orchestrator.run_autonomous_repair(123)
+
+    assert captured["files"] == ["app/calculator.py"]

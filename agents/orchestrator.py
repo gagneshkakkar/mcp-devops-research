@@ -3,6 +3,7 @@ import sys
 import re
 import shutil
 import anyio
+import ast
 
 from agents.diagnosis_agent import diagnose_run
 from agents.repair_agent import generate_repair
@@ -17,6 +18,23 @@ from agents.git_manager import (
 
 
 MAX_REPAIR_ATTEMPTS = 3
+
+
+def _source_contains_function(source: str, function_name: str) -> bool:
+    """Return whether source parses and defines the requested function."""
+    if not isinstance(source, str) or not source.strip() or not function_name:
+        return False
+
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, ValueError, TypeError):
+        return False
+
+    return any(
+        isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and node.name == function_name
+        for node in ast.walk(tree)
+    )
 
 
 # --------------------------------------------------
@@ -466,8 +484,58 @@ async def run_autonomous_repair(
         )
 
     # --------------------------------------------------
-    # SAFETY GATE
+    # SOURCE-EVIDENCE GATE (must run before branch creation)
     # --------------------------------------------------
+    failure_contexts = diagnosis_result.get("failure_contexts", [])
+    all_implementation_source = diagnosis_result.get(
+        "implementation_source", {}
+    )
+
+    contexts_by_test = {}
+    for context in failure_contexts:
+        context_test = context.get("test")
+        if context_test:
+            contexts_by_test.setdefault(context_test, []).append(context)
+
+    for diagnosis in diagnoses:
+        if diagnosis.get("review_status") != "READY_FOR_VALIDATION":
+            continue
+
+        test_name = diagnosis.get("test")
+        matching_contexts = contexts_by_test.get(test_name, [])
+
+        # Require exactly one context and one target. Missing or ambiguous
+        # mappings must never proceed to branch creation or repair.
+        evidence_is_valid = len(matching_contexts) == 1
+        targets = (
+            matching_contexts[0].get("implementation_targets", [])
+            if evidence_is_valid
+            else []
+        )
+        evidence_is_valid = evidence_is_valid and len(targets) == 1
+
+        if evidence_is_valid:
+            target = targets[0]
+            target_file = target.get("file", "")
+            target_function = target.get("function", "")
+            source = all_implementation_source.get(target_file, "")
+
+            evidence_is_valid = (
+                bool(target_file)
+                and bool(target_function)
+                and target_file == diagnosis.get("file")
+                and target_function == diagnosis.get("function")
+                and _source_contains_function(source, target_function)
+            )
+
+        if not evidence_is_valid:
+            diagnosis["review_status"] = "REVIEW_REQUIRED"
+            diagnosis["review_reason"] = (
+                "Missing, ambiguous, unmatched, or invalid implementation "
+                "source evidence. Independent review is required."
+            )
+
+    # Existing status gate also catches failures from the evidence gate.
     review_required = [
         diagnosis
         for diagnosis in diagnoses
@@ -735,6 +803,13 @@ async def run_autonomous_repair(
 
     final_tests_passed, final_test_output = run_tests()
 
+    # Initialize publication fields even when validation fails.
+    publication_status = "NOT_ATTEMPTED"
+    publication_error = None
+    publication_stage = None
+    pull_request = None
+    rollback_success = None
+
     # --------------------------------------------------
     # STEP 6
     # Final result
@@ -762,79 +837,108 @@ async def run_autonomous_repair(
             "Full test suite passed."
         )
 
-        # --------------------------------------------------
-        # Commit validated repairs
-        # --------------------------------------------------
-
-        print(
-            "\n---------- COMMITTING REPAIRS ----------"
-        )
-
-        commit_message = (
-            f"fix: autonomous repair for CI run "
-            f"{diagnosis_result['run_id']}"
-        )
-
-        commit_output = commit_changes(
-            commit_message
-        )
-
-        print(
-            commit_output
-        )
 
         # --------------------------------------------------
-        # Push validated repair branch
+        # Publish validated repairs safely
         # --------------------------------------------------
 
-        print(
-            "\n---------- PUSHING REPAIR BRANCH ----------"
-        )
+        publication_status = "NOT_STARTED"
+        publication_stage = "COMMITTING"
+        publication_error = None
+        pull_request = None
 
-        push_output = push_branch(
-            repair_branch
-        )
+        try:
+            print("\n---------- COMMITTING REPAIRS ----------")
 
-        print(push_output)
+            commit_message = (
+                f"fix: autonomous repair for CI run "
+                f"{diagnosis_result['run_id']}"
+            )
 
-        print(
-            "\n---------- CREATING PULL REQUEST ----------"
-        )
+            approved_files = list(dict.fromkeys(
+                result["file"]
+                for result in repair_results
+                if result.get("success") and result.get("file")
+            ))
 
-        pr_title = (
-            f"fix: autonomous repair for CI run "
-            f"{diagnosis_result['run_id']}"
-        )
+            if not approved_files or successful_repairs != total_diagnoses:
+                raise RuntimeError(
+                    "Publication blocked: repair targets are incomplete."
+                )
 
-        pr_body = (
-            "## Autonomous CI/CD Repair\n\n"
-            f"Automatically generated repair for CI run "
-            f"`{diagnosis_result['run_id']}`.\n\n"
-            "### Validation\n"
-            f"- Diagnoses: {len(diagnoses)}\n"
-            f"- Successful repairs: {successful_repairs}\n"
-            "- Full test suite: **PASSED**\n"
-            "- Repairs applied only to validated implementation targets\n"
-            "- Changes committed on an isolated repair branch\n\n"
-            "Please review the changes before merging."
-        )
+            publication_stage = "COMMITTING"
 
-        pull_request = create_pull_request(
-            head_branch=repair_branch,
-            base_branch="main",
-            title=pr_title,
-            body=pr_body
-        )
+            commit_output = commit_changes(
+                commit_message,
+                files=approved_files,
+            )
 
-        print(
-            f"Pull Request #{pull_request['number']}"
-        )
+            print(commit_output)
 
-        print(
-            f"URL: {pull_request['url']}"
-        )
+            # --------------------------------------------------
+            # Push validated repair branch
+            # --------------------------------------------------
 
-        overall_success = True
+            print("\n---------- PUSHING REPAIR BRANCH ----------")
+
+            publication_stage = "PUSHING"
+
+            push_output = push_branch(repair_branch)
+
+            print(push_output)
+
+            # --------------------------------------------------
+            # Create pull request
+            # --------------------------------------------------
+
+            print("\n---------- CREATING PULL REQUEST ----------")
+
+            publication_stage = "CREATING_PULL_REQUEST"
+
+            pr_title = (
+                f"fix: autonomous repair for CI run "
+                f"{diagnosis_result['run_id']}"
+            )
+
+            pr_body = (
+                "## Autonomous CI/CD Repair\n\n"
+                f"Automatically generated repair for CI run "
+                f"`{diagnosis_result['run_id']}`.\n\n"
+                "### Validation\n"
+                f"- Diagnoses: {len(diagnoses)}\n"
+                f"- Successful repairs: {successful_repairs}\n"
+                "- Full test suite: **PASSED**\n"
+                "- Repairs applied only to validated implementation targets\n"
+                "- Changes committed on an isolated repair branch\n\n"
+                "Please review the changes before merging."
+            )
+
+            pull_request = create_pull_request(
+                head_branch=repair_branch,
+                base_branch="main",
+                title=pr_title,
+                body=pr_body,
+            )
+
+            print(f"Pull Request #{pull_request['number']}")
+            print(f"URL: {pull_request['url']}")
+
+            publication_status = "PUBLISHED"
+
+        except Exception as exc:
+            publication_status = "FAILED"
+            publication_error = (
+                f"Publication failed during {publication_stage}: "
+                f"{type(exc).__name__}"
+            )
+
+            print(
+                f"Publication failed during {publication_stage}: "
+                f"{type(exc).__name__}"
+            )
+
+        overall_success = publication_status == "PUBLISHED"
+
 
     else:
 
@@ -899,6 +1003,7 @@ async def run_autonomous_repair(
         f"{overall_success}"
     )
 
+
     return {
         "run_id": diagnosis_result["run_id"],
         "repair_branch": repair_branch,
@@ -911,7 +1016,12 @@ async def run_autonomous_repair(
         "overall_success": overall_success,
         "rollback_success": (
             rollback_success if not final_tests_passed else None
-        )
+        ),
+        "publication_status": (
+            publication_status if final_tests_passed else "NOT_ATTEMPTED"
+        ),
+        "publication_error": publication_error,
+        "pull_request": pull_request,
     }
 
 
