@@ -1286,8 +1286,6 @@ async def diagnose_run(
             # Stop if the selected CI run has not completed
             # ------------------------------------------------
 
-            import re
-
             status_match = re.search(
                 r"(?m)^Status:\s*(\S+)",
                 status_text,
