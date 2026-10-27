@@ -1,4 +1,5 @@
 import subprocess
+from pathlib import Path
 from datetime import datetime
 
 
@@ -96,34 +97,29 @@ def get_status() -> str:
 
 
 def commit_changes(
-    message: str
+    message: str,
+    files: list[str] | None = None,
 ) -> str:
-    """
-    Stage all tracked/untracked project changes
-    and create a commit.
-    """
+    """Stage only explicitly approved files and create a commit."""
 
-    success, output = run_git_command(
-        ["add", "."]
-    )
-
-    if not success:
-        raise RuntimeError(
-            f"Git add failed: {output}"
+    if not files:
+        raise ValueError(
+            "An explicit non-empty file list is required."
         )
 
-    success, output = run_git_command(
-        [
-            "commit",
-            "-m",
-            message
-        ]
-    )
+    unique_files = _validate_repository_files(files)
 
+    success, output = run_git_command(
+        ["add", "--", *unique_files]
+    )
     if not success:
-        raise RuntimeError(
-            f"Git commit failed: {output}"
-        )
+        raise RuntimeError(f"Git add failed: {output}")
+
+    success, output = run_git_command(
+        ["commit", "-m", message]
+    )
+    if not success:
+        raise RuntimeError(f"Git commit failed: {output}")
 
     return output
 
@@ -193,3 +189,63 @@ def create_pull_request(
         title=title,
         body=body
     )
+
+def _validate_repository_files(files: list[str]) -> list[str]:
+    """Validate paths and return repository-relative file paths."""
+
+    from pathlib import Path
+
+    # Reject obviously unsafe paths before invoking Git.
+    for file_path in files:
+        if not isinstance(file_path, str) or not file_path.strip():
+            raise ValueError(
+                "Every staged file path must be a non-empty string."
+            )
+
+        supplied_path = Path(file_path)
+
+        if supplied_path.is_absolute():
+            raise ValueError(
+                f"File path must be relative to the repository: {file_path}"
+            )
+
+        if ".." in supplied_path.parts:
+            raise ValueError(
+                f"File path escapes the repository: {file_path}"
+            )
+
+    success, output = run_git_command(
+        ["rev-parse", "--show-toplevel"]
+    )
+    if not success or not output:
+        raise RuntimeError(
+            f"Unable to determine Git repository root: {output}"
+        )
+
+    repository_root = Path(output).resolve()
+    validated_files = []
+
+    for file_path in files:
+        resolved_path = (repository_root / Path(file_path)).resolve()
+
+        try:
+            relative_path = resolved_path.relative_to(repository_root)
+        except ValueError as exc:
+            raise ValueError(
+                f"File path escapes the repository: {file_path}"
+            ) from exc
+
+        if relative_path == Path("."):
+            raise ValueError(
+                f"A directory-wide staging path is not allowed: {file_path}"
+            )
+
+        if not resolved_path.exists():
+            raise ValueError(f"File does not exist: {file_path}")
+
+        if not resolved_path.is_file():
+            raise ValueError(f"Path is not a regular file: {file_path}")
+
+        validated_files.append(relative_path.as_posix())
+
+    return list(dict.fromkeys(validated_files))
