@@ -791,18 +791,86 @@ def apply_source_evidence_gate(
         except (ValueError, TypeError, SyntaxError):
             actual_value = item.get("actual")
 
-        if computed_value == actual_value and computed_value != expected_value:
+        if computed_value == expected_value:
+            # The implementation independently satisfies the assertion.
+            # A reported mismatch means the runtime evidence needs review.
             item["review_status"] = "REVIEW_REQUIRED"
             item["review_reason"] = (
-                "Source computes the observed actual value; the assertion mismatch "
-                "alone does not establish an implementation defect."
+                "Source evaluation matches the expected value, but not the "
+                "reported CI result; runtime evidence requires review."
             )
-        elif computed_value != expected_value:
-            # The evaluator found a discrepancy but cannot infer intended behavior.
+        elif computed_value == actual_value:
+            # The source explains the observed failure. Permit repair only
+            # when the documented operation and test expectation independently
+            # support a recognized arithmetic correction.
+            function_name = item.get("function")
+            docstring = ast.get_docstring(function_node) or ""
+            test_source = context.get("test_source", "")
+            recommended_fix = str(item.get("recommended_fix", "")).lower()
+
+            arithmetic_contracts = {
+                "multiply": {
+                    "doc_terms": ("product",),
+                    "expected_operator": ast.Mult,
+                    "wrong_operators": (ast.Add, ast.Sub, ast.Div),
+                    "fix_terms": ("a * b",),
+                },
+                "divide": {
+                    "doc_terms": ("division",),
+                    "expected_operator": ast.Div,
+                    "wrong_operators": (ast.Add, ast.Sub, ast.Mult),
+                    "fix_terms": ("a / b",),
+                },
+            }
+            contract = arithmetic_contracts.get(function_name)
+            return_node = returns[0].value
+            expected_operator = contract["expected_operator"] if contract else None
+
+            documented = bool(contract) and any(
+                term in docstring.lower()
+                for term in contract["doc_terms"]
+            )
+            test_mentions_contract = bool(contract) and (
+                f"{function_name}(" in test_source
+            )
+            recommended_fix_supported = bool(contract) and any(
+                term in recommended_fix
+                for term in contract["fix_terms"]
+            )
+            simple_binary_expression = (
+                isinstance(return_node, ast.BinOp)
+                and isinstance(return_node.left, ast.Name)
+                and isinstance(return_node.right, ast.Name)
+                and return_node.left.id in values
+                and return_node.right.id in values
+            )
+
+            if (
+                contract
+                and documented
+                and test_mentions_contract
+                and recommended_fix_supported
+                and simple_binary_expression
+                and isinstance(return_node.op, contract["wrong_operators"])
+                and computed_value != expected_value
+            ):
+                item["review_status"] = "READY_FOR_VALIDATION"
+                item["review_reason"] = (
+                    "Observed result matches the source, while the documented "
+                    "arithmetic contract and test expectation support a specific "
+                    "operator correction. Repair must still pass validation."
+                )
+            else:
+                item["review_status"] = "REVIEW_REQUIRED"
+                item["review_reason"] = (
+                    "Source computes the observed actual value; the assertion mismatch "
+                    "alone does not establish an implementation defect."
+                )
+        else:
             item["review_status"] = "REVIEW_REQUIRED"
             item["review_reason"] = (
-                "Source evaluation and test expectation differ; intended behavior "
-                "requires independent confirmation."
+                "Source evaluation does not match the observed result; "
+                "the failure evidence is inconsistent."
             )
 
     return diagnosis
