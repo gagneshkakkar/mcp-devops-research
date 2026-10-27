@@ -1283,6 +1283,60 @@ async def diagnose_run(
             )
 
             # ------------------------------------------------
+            # Stop if the selected CI run has not completed
+            # ------------------------------------------------
+
+            import re
+
+            status_match = re.search(
+                r"(?m)^Status:\s*(\S+)",
+                status_text,
+            )
+
+            conclusion_match = re.search(
+                r"(?m)^Conclusion:\s*(\S+)",
+                status_text,
+            )
+
+            if not status_match:
+                print(
+                    "Warning: CI status unavailable; "
+                    "continuing with existing safety checks."
+                )
+            else:
+                run_status = status_match.group(1).strip().lower()
+
+                conclusion = (
+                    conclusion_match.group(1).strip().lower()
+                    if conclusion_match
+                    else "unknown"
+                )
+
+                if run_status != "completed":
+                    return {
+                        "run_id": run_id,
+                        "status": run_status,
+                        "conclusion": conclusion,
+                        "diagnoses": [],
+                        "message": (
+                            f"CI run {run_id} has status '{run_status}'. "
+                            "Diagnosis skipped because the run has not completed."
+                        ),
+                    }
+
+                if conclusion != "failure":
+                    return {
+                        "run_id": run_id,
+                        "status": run_status,
+                        "conclusion": conclusion,
+                        "diagnoses": [],
+                        "message": (
+                            f"CI run {run_id} completed with conclusion "
+                            f"'{conclusion}'. No failure diagnosis is needed."
+                        ),
+                    }
+
+            # ------------------------------------------------
             # Build logs
             # ------------------------------------------------
 

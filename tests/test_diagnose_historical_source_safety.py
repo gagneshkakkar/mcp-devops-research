@@ -98,3 +98,58 @@ def test_missing_historical_test_source_stops_before_llm(monkeypatch):
         asyncio.run(diagnosis_agent.diagnose_run(run_id=8))
 
     assert llm_calls == []
+
+
+def test_in_progress_run_stops_before_fetching_logs_or_calling_llm(monkeypatch):
+    class InProgressSession(FakeClientSession):
+        async def call_tool(self, name, arguments=None):
+            if name == "get_build_status":
+                return SimpleNamespace(
+                    content=[
+                        SimpleNamespace(
+                            text=(
+                                "Run ID: 8\n"
+                                "Status: in_progress\n"
+                                "Conclusion: None\n"
+                                f"Commit SHA: {SHA}\n"
+                            )
+                        )
+                    ]
+                )
+
+            if name == "get_build_logs":
+                pytest.fail("Logs must not be fetched before CI finishes.")
+
+            pytest.fail(f"Unexpected MCP tool call: {name}")
+
+    class InProgressSessionContext:
+        def __init__(self, *args, **kwargs):
+            self.session = InProgressSession()
+
+        async def __aenter__(self):
+            return self.session
+
+        async def __aexit__(self, exc_type, exc, traceback):
+            return False
+
+    monkeypatch.setattr(
+        diagnosis_agent,
+        "stdio_client",
+        lambda *args, **kwargs: FakeStdioContext(),
+    )
+    monkeypatch.setattr(
+        diagnosis_agent,
+        "ClientSession",
+        InProgressSessionContext,
+    )
+    monkeypatch.setattr(
+        diagnosis_agent,
+        "ask_llm",
+        lambda prompt: pytest.fail("LLM must not run before CI finishes."),
+    )
+
+    result = asyncio.run(diagnosis_agent.diagnose_run(run_id=8))
+
+    assert result["run_id"] == 8
+    assert result["diagnoses"] == []
+    assert result["status"] == "in_progress"
