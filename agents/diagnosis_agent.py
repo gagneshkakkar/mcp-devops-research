@@ -1,4 +1,7 @@
+import ast
 import json
+import operator
+import os
 import re
 from pathlib import Path
 
@@ -6,7 +9,7 @@ from openai import OpenAI
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-
+from agents.import_resolver import resolve_imported_function
 
 # ============================================================
 # Ollama / Local LLM
@@ -27,7 +30,8 @@ server_params = StdioServerParameters(
     args=[
         "-m",
         "mcp_server.server"
-    ]
+    ],
+    env=os.environ.copy(),
 )
 
 
@@ -139,6 +143,20 @@ def ask_llm(prompt: str) -> dict:
                 "LLM returned invalid JSON "
                 f"after repair attempt: {error}"
             )
+
+
+def extract_commit_sha(status_text: str) -> str:
+    """Extract a full 40-character Git commit SHA from MCP build status."""
+    match = re.search(
+        r"(?m)^Commit SHA:\s*([0-9a-fA-F]{40})\s*$",
+        status_text,
+    )
+    if not match:
+        raise ValueError(
+            "Build status is missing a valid 40-character Commit SHA; "
+            "historical-source diagnosis cannot continue safely."
+        )
+    return match.group(1).lower()
 
 
 # ============================================================
@@ -540,6 +558,253 @@ def validate_diagnosis_targets(
                 f"{expected['functions']}"
             )
 
+    # Fail closed on missing or invalid review decisions.
+    # READY_FOR_VALIDATION permits a repair attempt, not approval
+    # of the proposed patch or its final correctness.
+    allowed_statuses = {
+        "READY_FOR_VALIDATION",
+        "REVIEW_REQUIRED",
+    }
+
+    for item in diagnoses:
+        status = item.get("review_status")
+
+        if status not in allowed_statuses:
+            item["review_status"] = "REVIEW_REQUIRED"
+            continue
+
+        # Multiple authoritative targets are ambiguous.
+        # Require human review rather than trusting the LLM's choice.
+        target_info = expected_targets.get(item["test"], {})
+        target_files = set(target_info.get("files", []))
+        target_functions = set(target_info.get("functions", []))
+
+        if len(target_files) > 1 or len(target_functions) > 1:
+            item["review_status"] = "REVIEW_REQUIRED"
+
+    return diagnosis
+
+
+# ============================================================
+# CONSERVATIVE SOURCE-EVIDENCE GATE
+# ============================================================
+
+def _literal_value(node):
+    """Return a literal value, or None when the expression is not literal."""
+    try:
+        return ast.literal_eval(node)
+    except (ValueError, TypeError, SyntaxError):
+        return None
+
+
+def _evaluate_simple_expression(node, values):
+    """
+    Safely evaluate a small, side-effect-free subset of Python AST.
+    Unsupported expressions return (False, None).
+    """
+    binary_ops = {
+        ast.Add: operator.add,
+        ast.Sub: operator.sub,
+        ast.Mult: operator.mul,
+        ast.Div: operator.truediv,
+        ast.FloorDiv: operator.floordiv,
+        ast.Mod: operator.mod,
+        ast.Pow: operator.pow,
+    }
+    unary_ops = {
+        ast.UAdd: operator.pos,
+        ast.USub: operator.neg,
+    }
+
+    if isinstance(node, ast.Constant):
+        return True, node.value
+
+    if isinstance(node, ast.Name) and node.id in values:
+        return True, values[node.id]
+
+    if isinstance(node, ast.BinOp) and type(node.op) in binary_ops:
+        left_ok, left = _evaluate_simple_expression(node.left, values)
+        right_ok, right = _evaluate_simple_expression(node.right, values)
+        if not left_ok or not right_ok:
+            return False, None
+        try:
+            return True, binary_ops[type(node.op)](left, right)
+        except (ArithmeticError, TypeError, ValueError, OverflowError):
+            return False, None
+
+    if isinstance(node, ast.UnaryOp) and type(node.op) in unary_ops:
+        ok, value = _evaluate_simple_expression(node.operand, values)
+        if not ok:
+            return False, None
+        try:
+            return True, unary_ops[type(node.op)](value)
+        except (ArithmeticError, TypeError, ValueError):
+            return False, None
+
+    return False, None
+
+
+def _find_simple_test_call(test_source, function_name):
+    """
+    Find a simple assertion like `assert add(2, 3) == 6`.
+    Returns (argument_values, expected_value) or None.
+    """
+    test_source = test_source.lstrip("\ufeff")
+    try:
+        tree = ast.parse(test_source)
+    except (SyntaxError, TypeError):
+        return None
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Assert):
+            continue
+        test = node.test
+        if not isinstance(test, ast.Compare) or len(test.ops) != 1:
+            continue
+        if not isinstance(test.ops[0], ast.Eq) or len(test.comparators) != 1:
+            continue
+        call = test.left
+        if not isinstance(call, ast.Call) or not isinstance(call.func, ast.Name):
+            continue
+        if call.func.id != function_name:
+            continue
+        args = [_literal_value(arg) for arg in call.args]
+        expected = _literal_value(test.comparators[0])
+        if any(value is None for value in args) or expected is None:
+            continue
+        return args, expected
+    return None
+
+
+def apply_source_evidence_gate(
+    diagnosis: dict,
+    failure_contexts: list,
+    implementation_source: dict,
+) -> dict:
+    """
+    Conservatively downgrade diagnoses when simple source inspection shows
+    that the implementation computes the reported actual value while the
+    test expects another value. This does not prove a specification; it
+    prevents an assertion mismatch alone from authorizing an automatic edit.
+    """
+    contexts_by_test = {
+        context.get("test"): context
+        for context in failure_contexts
+        if context.get("test")
+    }
+
+    for item in diagnosis.get("diagnoses", []):
+        if item.get("review_status") != "READY_FOR_VALIDATION":
+            continue
+
+        test_name = item.get("test")
+        context = contexts_by_test.get(test_name)
+
+        if not context:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Missing failure context for source-evidence validation."
+            continue
+
+        targets = context.get("implementation_targets", [])
+        matching_targets = [
+            target for target in targets
+            if target.get("file", "").replace("\\", "/") == item.get("file", "").replace("\\", "/")
+            and target.get("function") == item.get("function")
+        ]
+
+        if len(targets) != 1 or len(matching_targets) != 1:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Implementation target is missing or ambiguous."
+            continue
+
+        target_file = matching_targets[0].get("file", "")
+        source = implementation_source.get(target_file, "")
+        if not source.strip() or source.startswith("Unable to read "):
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Implementation source is unavailable."
+            continue
+
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, TypeError):
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Implementation source could not be parsed."
+            continue
+
+        function_node = next(
+            (
+                node for node in ast.walk(tree)
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and node.name == item.get("function")
+            ),
+            None,
+        )
+        if function_node is None:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Target function was not found in supplied source."
+            continue
+
+        test_case = _find_simple_test_call(
+            context.get("test_source", ""),
+            item.get("function", ""),
+        )
+        if test_case is None:
+            # The generic semantic relationship cannot be proven safely.
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = (
+                "Could not independently evaluate a simple assertion against source."
+            )
+            continue
+
+        arguments, expected_value = test_case
+        positional_parameters = [
+            arg.arg for arg in function_node.args.args
+        ]
+        if len(arguments) != len(positional_parameters):
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Test arguments do not match the target function signature."
+            continue
+
+        values = dict(zip(positional_parameters, arguments))
+        returns = [
+            node for node in ast.walk(function_node)
+            if isinstance(node, ast.Return) and node.value is not None
+        ]
+
+        # Only a single, straightforward return expression is considered.
+        if len(returns) != 1:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Function control flow is too complex for the simple source checker."
+            continue
+
+        computed_ok, computed_value = _evaluate_simple_expression(
+            returns[0].value, values
+        )
+        if not computed_ok:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = "Source expression is outside the safe evaluator subset."
+            continue
+
+        actual_value = None
+        try:
+            actual_value = ast.literal_eval(str(item.get("actual", "")).strip())
+        except (ValueError, TypeError, SyntaxError):
+            actual_value = item.get("actual")
+
+        if computed_value == actual_value and computed_value != expected_value:
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = (
+                "Source computes the observed actual value; the assertion mismatch "
+                "alone does not establish an implementation defect."
+            )
+        elif computed_value != expected_value:
+            # The evaluator found a discrepancy but cannot infer intended behavior.
+            item["review_status"] = "REVIEW_REQUIRED"
+            item["review_reason"] = (
+                "Source evaluation and test expectation differ; intended behavior "
+                "requires independent confirmation."
+            )
+
     return diagnosis
 
 
@@ -673,110 +938,59 @@ def locate_implementation_targets(
     failed_test: str
 ) -> list[dict]:
     """
-    Determine which implementation functions are called by
-    the failed test.
-
-    This is deterministic AST analysis and is therefore
-    authoritative.
+    Resolve implementation targets from explicit imports in the
+    failed test file. Never guess based on repository-wide names.
     """
-
-    import ast
-
-    test_file = find_test_file(
-        failed_test
-    )
-
-    test_function = find_test_function(
-        failed_test
-    )
+    test_file = find_test_file(failed_test)
+    test_function = find_test_function(failed_test)
 
     if not test_file.exists():
-
         return []
 
-    source = test_file.read_text(
-        encoding="utf-8"
+    try:
+        source = test_file.read_text(encoding="utf-8-sig")
+        tree = ast.parse(source)
+    except (OSError, SyntaxError, UnicodeDecodeError):
+        return []
+
+    target_node = next(
+        (
+            node for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == test_function
+        ),
+        None,
     )
-
-    tree = ast.parse(
-        source
-    )
-
-    target_node = None
-
-    for node in tree.body:
-
-        if isinstance(
-            node,
-            (
-                ast.FunctionDef,
-                ast.AsyncFunctionDef
-            )
-        ):
-
-            if node.name == test_function:
-
-                target_node = node
-
-                break
 
     if target_node is None:
-
         return []
 
     called_functions = []
-
-    for node in ast.walk(
-        target_node
-    ):
-
-        if isinstance(
-            node,
-            ast.Call
-        ):
-
-            if isinstance(
-                node.func,
-                ast.Name
-            ):
-
-                called_functions.append(
-                    node.func.id
-                )
-
-            elif isinstance(
-                node.func,
-                ast.Attribute
-            ):
-
-                called_functions.append(
-                    node.func.attr
-                )
-
-    called_functions = list(
-        dict.fromkeys(
-            called_functions
-        )
-    )
+    for node in ast.walk(target_node):
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name):
+                called_functions.append(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                called_functions.append(node.func.attr)
 
     targets = []
+    seen = set()
 
-    for function_name in called_functions:
-
-        files = find_function_definition(
-            function_name
+    for function_name in dict.fromkeys(called_functions):
+        resolved_files = resolve_imported_function(
+            test_file,
+            function_name,
         )
 
-        for file_path in files:
-
-            targets.append(
-                {
-                    "file": str(
-                        file_path
-                    ),
-                    "function": function_name
-                }
-            )
+        for file_path in resolved_files:
+            target = {
+                "file": file_path.relative_to(Path.cwd()).as_posix(),
+                "function": function_name,
+            }
+            key = (target["file"], target["function"])
+            if key not in seen:
+                seen.add(key)
+                targets.append(target)
 
     return targets
 
@@ -784,6 +998,126 @@ def locate_implementation_targets(
 # ============================================================
 # DIAGNOSIS
 # ============================================================
+
+async def fetch_historical_source(
+    client_session,
+    path: str,
+    commit_sha: str,
+) -> str:
+    """Fetch source from the exact failed CI commit; never use local fallback."""
+    result = await client_session.call_tool(
+        "get_repository_file_tool",
+        {"path": path, "ref": commit_sha},
+    )
+
+    if getattr(result, "isError", False):
+        raise RuntimeError("Historical source retrieval failed.")
+
+    content = getattr(result, "content", None)
+    if not content:
+        raise RuntimeError("Historical source response was empty.")
+
+    text = getattr(content[0], "text", "")
+    if not text.strip():
+        raise RuntimeError("Historical source response was empty.")
+
+    if text.startswith("REPOSITORY_FILE_NOT_FOUND:"):
+        raise FileNotFoundError(f"Historical file not found: {path}")
+
+    if text.startswith((
+        "REPOSITORY_FILE_HTTP_ERROR:",
+        "REPOSITORY_FILE_RETRIEVAL_ERROR:",
+        "Error retrieving repository file",
+    )):
+        raise RuntimeError("Historical source retrieval failed.")
+
+    return text
+
+
+async def locate_historical_implementation_targets(
+    client_session,
+    failed_test: str,
+    test_source: str,
+    commit_sha: str,
+) -> list[dict]:
+    """Resolve implementation targets using test source from the failed commit."""
+    from agents.import_resolver import resolve_imported_function_from_source
+
+    test_function = find_test_function(failed_test)
+
+    try:
+        tree = ast.parse(test_source.lstrip("\ufeff"))
+    except (SyntaxError, TypeError):
+        raise RuntimeError("Historical test source could not be parsed.")
+
+    target_node = next(
+        (
+            node for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == test_function
+        ),
+        None,
+    )
+
+    if target_node is None:
+        raise RuntimeError(
+            f"Historical test function not found: {test_function}"
+        )
+
+    called_functions = []
+    for node in ast.walk(target_node):
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name):
+                called_functions.append(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                called_functions.append(node.func.attr)
+
+    targets = []
+    seen = set()
+
+    for function_name in dict.fromkeys(called_functions):
+        candidates = resolve_imported_function_from_source(
+            test_source,
+            function_name,
+        )
+
+        if not candidates:
+            continue
+
+        found = []
+        for candidate in candidates:
+            try:
+                await fetch_historical_source(
+                    client_session,
+                    candidate,
+                    commit_sha,
+                )
+                found.append(candidate)
+            except FileNotFoundError:
+                # Only a confirmed HTTP 404 means this candidate is absent.
+                continue
+
+        if len(found) > 1:
+            raise RuntimeError(
+                f"Ambiguous historical implementation for {function_name}."
+            )
+
+        if len(found) == 1:
+            key = (found[0], function_name)
+            if key not in seen:
+                seen.add(key)
+                targets.append({
+                    "file": found[0],
+                    "function": function_name,
+                })
+
+    if not targets:
+        raise RuntimeError(
+            f"No unambiguous historical implementation target found for {failed_test}."
+        )
+
+    return targets
+
 
 async def diagnose_run(
     run_id: int | None = None
@@ -869,6 +1203,9 @@ async def diagnose_run(
                 status_result.content[0].text
             )
 
+            # Historical source must be tied to the selected CI commit.
+            commit_sha = extract_commit_sha(status_text)
+
             print(
                 "========== BUILD STATUS =========="
             )
@@ -943,47 +1280,50 @@ async def diagnose_run(
                     "test"
                 ]
 
-                test_file = find_test_file(
-                    test_name
-                )
+                test_file = find_test_file(test_name)
+                test_path = test_file.as_posix()
 
-                test_source = read_file(
-                    test_file
-                )
-
-                targets = (
-                    locate_implementation_targets(
-                        test_name
+                # Reject paths that could escape the repository.
+                if (
+                    test_file.is_absolute()
+                    or ".." in test_file.parts
+                    or not test_path.endswith(".py")
+                ):
+                    raise RuntimeError(
+                        "Invalid historical test path; diagnosis stopped."
                     )
+
+                # Retrieve the test source from the exact failed CI commit.
+                test_source = await fetch_historical_source(
+                    client_session,
+                    test_path,
+                    commit_sha,
+                )
+
+                targets = await locate_historical_implementation_targets(
+                    client_session,
+                    test_name,
+                    test_source,
+                    commit_sha,
                 )
 
                 files = []
 
                 for target in targets:
-
-                    file_path = target[
-                        "file"
-                    ]
+                    file_path = target["file"]
 
                     if file_path not in files:
-
-                        files.append(
-                            file_path
-                        )
+                        files.append(file_path)
 
                     if file_path not in implementation_files:
-
-                        implementation_files.append(
-                            file_path
-                        )
+                        implementation_files.append(file_path)
 
                     if file_path not in implementation_source:
-
-                        implementation_source[
-                            file_path
-                        ] = read_file(
-                            Path(
-                                file_path
+                        implementation_source[file_path] = (
+                            await fetch_historical_source(
+                                client_session,
+                                file_path,
+                                commit_sha,
                             )
                         )
 
@@ -1025,6 +1365,20 @@ Do NOT change the test.
 Do NOT invent a different implementation file.
 
 Do NOT invent a different implementation function.
+
+Set review_status to READY_FOR_VALIDATION only when the supplied
+source and failure evidence support a specific implementation defect.
+
+Before assigning READY_FOR_VALIDATION:
+- Inspect the actual implementation of the specified function.
+- Verify that the implementation explains the observed actual result.
+- Verify that the recommended fix addresses the demonstrated defect.
+- If the implementation appears correct and the test expectation may be
+  wrong, set review_status to REVIEW_REQUIRED.
+- Never claim that a function returns its first argument if the supplied
+  source shows it returns a + b.
+- If source evidence contradicts the proposed root cause, set
+  review_status to REVIEW_REQUIRED.
 
 Return JSON only.
 
@@ -1089,7 +1443,8 @@ Return exactly:
             "root_cause": "specific root cause",
             "file": "implementation file",
             "function": "implementation function",
-            "recommended_fix": "specific code change"
+            "recommended_fix": "specific code change",
+            "review_status": "READY_FOR_VALIDATION or REVIEW_REQUIRED"
         }}
     ]
 }}
@@ -1136,9 +1491,14 @@ the authoritative implementation target.
                 failure_contexts
             )
 
+            diagnosis = apply_source_evidence_gate(
+                diagnosis,
+                failure_contexts,
+                implementation_source,
+            )
+
             print(
-                "All LLM repair targets match "
-                "static source analysis."
+                "Target validation and conservative source-evidence checks completed."
             )
 
             # ------------------------------------------------

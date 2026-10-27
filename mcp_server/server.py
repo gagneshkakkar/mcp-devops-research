@@ -9,6 +9,7 @@ from mcp_server.github_client import (
     get_workflow_run,
     get_workflow_jobs,
     get_workflow_logs,
+    get_repository_file,
 )
 
 mcp = MCPServer("DevOps Research MCP Server")
@@ -52,7 +53,8 @@ def get_build_status(run_id: int | None = None) -> str:
             f"Status: {run['status']}\n"
             f"Conclusion: {run['conclusion']}\n"
             f"Branch: {run['head_branch']}\n"
-            f"Event: {run['event']}"
+            f"Event: {run['event']}\n"
+            f"Commit SHA: {run['head_sha']}"
         )
 
     except Exception as error:
@@ -96,6 +98,32 @@ def get_build_logs(run_id: int | None = None) -> str:
 
     except Exception as error:
         return f"Error retrieving build logs: {error}"
+
+
+@mcp.tool()
+def get_repository_file_tool(path: str, ref: str) -> str:
+    """Read a repository file at a Git ref, with categorized errors."""
+    import requests
+
+    try:
+        return get_repository_file(path, ref)
+    except requests.HTTPError as error:
+        response = error.response
+        status_code = response.status_code if response is not None else None
+
+        if status_code == 404:
+            return f"REPOSITORY_FILE_NOT_FOUND: {path}"
+
+        return (
+            "REPOSITORY_FILE_HTTP_ERROR: "
+            f"status={status_code}; retrieval failed."
+        )
+    except Exception as error:
+        # Avoid returning tokens, headers, or arbitrary exception details.
+        return (
+            "REPOSITORY_FILE_RETRIEVAL_ERROR: "
+            f"{type(error).__name__}; retrieval failed."
+        )
 
 
 if __name__ == "__main__":

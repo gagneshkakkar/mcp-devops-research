@@ -1,5 +1,13 @@
+
 import ast
 from pathlib import Path
+
+try:
+    from agents.import_resolver import resolve_imported_function
+except ModuleNotFoundError as exc:
+    if exc.name != "agents":
+        raise
+    from import_resolver import resolve_imported_function
 
 
 def find_test_file(failed_test: str) -> Path:
@@ -7,202 +15,141 @@ def find_test_file(failed_test: str) -> Path:
     Extract the test file path from a pytest failure identifier.
 
     Example:
-    tests/test_project.py::test_multiply
+        tests/test_project.py::test_multiply
 
     Returns:
-    tests/test_project.py
+        tests/test_project.py
     """
-
     test_path = failed_test.split("::")[0]
-
     return Path(test_path)
 
 
 def extract_test_functions(
     test_file: Path,
-    test_name: str | None = None
-) -> list:
+    test_name: str | None = None,
+) -> list[str]:
     """
-    Extract implementation function calls from a test file.
+    Extract function calls from a test file.
 
-    If test_name is supplied, only inspect that specific
-    test function.
+    If test_name is supplied, inspect only that test function.
+    Otherwise, inspect the entire file.
     """
-
-    source = test_file.read_text(
-        encoding="utf-8"
-    )
-
-    tree = ast.parse(source)
-
-    functions = []
+    try:
+        source = test_file.read_text(encoding="utf-8-sig")
+        tree = ast.parse(source)
+    except (OSError, UnicodeDecodeError, SyntaxError):
+        return []
 
     target_node = None
 
-    # --------------------------------------------------
-    # Find the specific test function
-    # --------------------------------------------------
-
     if test_name:
-
         for node in tree.body:
-
-            if isinstance(
-                node,
-                (ast.FunctionDef, ast.AsyncFunctionDef)
-            ):
-
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 if node.name == test_name:
-
                     target_node = node
                     break
 
-    # --------------------------------------------------
-    # If no specific test was requested,
-    # inspect the entire file.
-    # --------------------------------------------------
+        # Do not accidentally inspect the entire file if the
+        # requested test function cannot be found.
+        if target_node is None:
+            return []
 
     if target_node is None:
-
         target_node = tree
 
-    # --------------------------------------------------
-    # Find function calls
-    # --------------------------------------------------
+    functions = []
 
     for node in ast.walk(target_node):
+        if not isinstance(node, ast.Call):
+            continue
 
-        if isinstance(node, ast.Call):
+        if isinstance(node.func, ast.Name):
+            functions.append(node.func.id)
+        elif isinstance(node.func, ast.Attribute):
+            functions.append(node.func.attr)
 
-            if isinstance(
-                node.func,
-                ast.Name
-            ):
+    return list(dict.fromkeys(functions))
 
-                functions.append(
-                    node.func.id
-                )
 
-            elif isinstance(
-                node.func,
-                ast.Attribute
-            ):
+def find_function_definition(
+    function_name: str,
+    root: str = ".",
+    test_file: str = "tests/test_project.py",
+) -> list[Path]:
+    """
+    Resolve a function through explicit imports in the test module.
 
-                functions.append(
-                    node.func.attr
-                )
+    Unlike a repository-wide name search, this does not treat every
+    matching function in benchmark fixtures as a repair target.
 
-    return list(
-        dict.fromkeys(functions)
+    Returns an empty list when the import cannot be resolved
+    confidently.
+    """
+    return resolve_imported_function(
+        test_file=test_file,
+        function_name=function_name,
+        root=root,
     )
 
 
-def find_function_definition(function_name: str, root: str = "."):
-    """
-    Search the repository for the Python file containing
-    the requested function definition.
-    """
-
-    root_path = Path(root)
-
-    matches = []
-
-    for file_path in root_path.rglob("*.py"):
-
-        # Ignore virtual environment and cache files
-        if ".venv" in file_path.parts:
-            continue
-
-        if "__pycache__" in file_path.parts:
-            continue
-
-        if ".backups" in file_path.parts:
-            continue
-        try:
-            source = file_path.read_text(encoding="utf-8")
-            tree = ast.parse(source)
-        except (UnicodeDecodeError, SyntaxError):
-            continue
-
-        for node in ast.walk(tree):
-
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-
-                if node.name == function_name:
-                    matches.append(file_path)
-
-    return matches
-
 def read_source_file(file_path: Path) -> str:
-    """
-    Read a Python source file safely.
-    """
-
+    """Read a source file safely."""
     try:
-        return file_path.read_text(encoding="utf-8")
-    except (FileNotFoundError, UnicodeDecodeError) as e:
-        return f"Unable to read {file_path}: {e}"
+        return file_path.read_text(encoding="utf-8-sig")
+    except (OSError, UnicodeDecodeError) as error:
+        return f"Unable to read {file_path}: {error}"
+
 
 if __name__ == "__main__":
-
     failed_test = "tests/test_project.py::test_multiply"
 
-    # --------------------------------------------------
-    # 1. Locate test file
-    # --------------------------------------------------
-
+    # 1. Locate the test file and specific test function.
     test_file = find_test_file(failed_test)
+    test_name = failed_test.split("::")[-1]
 
     print("========== TEST FILE ==========")
     print(test_file)
 
-    # --------------------------------------------------
-    # 2. Find functions used by the test file
-    # --------------------------------------------------
+    if not test_file.is_file():
+        raise SystemExit(f"Test file not found: {test_file}")
 
-    functions = extract_test_functions(test_file)
+    # 2. Extract function calls from the requested test only.
+    functions = extract_test_functions(
+        test_file,
+        test_name,
+    )
 
     print("\n========== FUNCTIONS ==========")
     print(functions)
 
-    # --------------------------------------------------
-    # 3. Locate implementations
-    # --------------------------------------------------
-
+    # 3. Resolve functions through imports in this test module.
     print("\n========== IMPLEMENTATIONS ==========")
 
     implementation_files = []
 
     for function in functions:
+        matches = find_function_definition(
+            function_name=function,
+            test_file=str(test_file),
+        )
 
-        matches = find_function_definition(function)
+        if not matches:
+            print(f"{function} -> unresolved; no target selected")
+            continue
 
         for match in matches:
-
             print(f"{function} -> {match}")
 
             if match not in implementation_files:
                 implementation_files.append(match)
 
-    # --------------------------------------------------
-    # 4. Read test source
-    # --------------------------------------------------
-
-    test_source = read_source_file(test_file)
-
+    # 4. Display the test source.
     print("\n========== TEST SOURCE ==========")
-    print(test_source)
+    print(read_source_file(test_file))
 
-    # --------------------------------------------------
-    # 5. Read implementation source
-    # --------------------------------------------------
-
+    # 5. Display only resolved implementation sources.
     print("\n========== IMPLEMENTATION SOURCE ==========")
 
     for file_path in implementation_files:
-
         print(f"\n--- {file_path} ---")
-
-        source = read_source_file(file_path)
-
-        print(source)
+        print(read_source_file(file_path))

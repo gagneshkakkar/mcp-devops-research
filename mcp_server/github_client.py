@@ -171,3 +171,77 @@ def create_pull_request(
         "head": head_branch,
         "base": base_branch
     }
+
+
+def get_repository_file(path: str, ref: str) -> str:
+    """Retrieve a repository file at a specific branch, tag, or commit SHA."""
+    import base64
+
+    if not path or path.startswith("/") or ".." in path.split("/"):
+        raise ValueError("Invalid repository file path.")
+
+    if not ref or not ref.strip():
+        raise ValueError("A branch, tag, or commit SHA is required.")
+
+    response = requests.get(
+        f"{BASE_URL}/contents/{path}",
+        headers=get_headers(),
+        params={"ref": ref},
+        timeout=30,
+    )
+    response.raise_for_status()
+
+    item = response.json()
+
+    if item.get("type") != "file" or "content" not in item:
+        raise ValueError(f"GitHub did not return a file for path: {path}")
+
+    return base64.b64decode(item["content"]).decode("utf-8-sig")
+
+from pathlib import PurePosixPath
+
+
+def resolve_repository_file_path(
+    candidate_paths: list[str],
+    ref: str,
+) -> str:
+    """Resolve exactly one candidate file at a Git ref or commit SHA.
+
+    Only an HTTP 404 marks a candidate as absent. Other failures propagate.
+    """
+    if not candidate_paths:
+        raise ValueError("No candidate repository paths were provided.")
+
+    if not ref or not ref.strip():
+        raise ValueError("A branch, tag, or commit SHA is required.")
+
+    found = []
+
+    for path in candidate_paths:
+        normalized = PurePosixPath(path)
+
+        if (
+            not path
+            or normalized.is_absolute()
+            or "\\" in path
+            or any(part in ("", ".", "..") for part in path.split("/"))
+        ):
+            raise ValueError("Invalid repository file path.")
+
+        try:
+            get_repository_file(path, ref)
+        except requests.HTTPError as error:
+            response = error.response
+            if response is not None and response.status_code == 404:
+                continue
+            raise
+
+        found.append(path)
+
+    if len(found) != 1:
+        raise ValueError(
+            "Historical source path is ambiguous or unavailable: "
+            f"{len(found)} candidates exist at the requested ref."
+        )
+
+    return found[0]
