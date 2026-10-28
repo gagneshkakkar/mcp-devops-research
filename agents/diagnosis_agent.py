@@ -196,70 +196,49 @@ def extract_commit_sha(status_text: str) -> str:
 # TEST NAME NORMALIZATION
 # ============================================================
 
+
 def normalize_test_name(
     test_name: str,
     known_tests: list[str]
 ) -> str | None:
     """
-    Convert different LLM representations of a pytest test
-    into the authoritative pytest node ID.
+    Normalize an LLM test name to an authoritative pytest node ID.
 
-    Examples:
-
-        test_multiply
-        tests/test_project.py::test_multiply
-
-    both become:
-
-        tests/test_project.py::test_multiply
+    Accepts full node IDs, pytest function names, and unique aliases
+    such as 'multiply' for 'test_multiply'.
     """
-
     if not test_name:
         return None
 
-    value = str(
-        test_name
-    ).strip()
+    value = str(test_name).strip().strip("`")
 
-    value = value.strip(
-        "`"
-    )
-
-    # --------------------------------------------------------
-    # Exact match
-    # --------------------------------------------------------
-
+    # Exact authoritative node ID.
     if value in known_tests:
         return value
 
-    # --------------------------------------------------------
-    # Remove pytest node-id prefixes
-    # --------------------------------------------------------
+    # Extract the test function name from a pytest node ID.
+    short_name = value.split("::")[-1]
 
-    short_name = value.split(
-        "::"
-    )[-1]
+    # First, match the exact pytest function name.
+    matches = [
+        known_test
+        for known_test in known_tests
+        if known_test.split("::")[-1] == short_name
+    ]
 
-    # --------------------------------------------------------
-    # Compare against authoritative tests
-    # --------------------------------------------------------
+    if len(matches) == 1:
+        return matches[0]
 
-    matches = []
+    if len(matches) > 1:
+        return None
 
-    for known_test in known_tests:
-
-        known_short_name = known_test.split(
-            "::"
-        )[-1]
-
-        if short_name == known_short_name:
-            matches.append(
-                known_test
-            )
-
-    # --------------------------------------------------------
-    # Only accept an unambiguous match
-    # --------------------------------------------------------
+    # Support a bare alias only when it uniquely matches a test name
+    # after removing the conventional "test_" prefix.
+    matches = [
+        known_test
+        for known_test in known_tests
+        if known_test.split("::")[-1].removeprefix("test_") == short_name
+    ]
 
     if len(matches) == 1:
         return matches[0]
