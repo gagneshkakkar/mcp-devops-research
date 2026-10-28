@@ -35,6 +35,29 @@ server_params = StdioServerParameters(
 )
 
 
+def _extract_json_object(content: str) -> str:
+    """Extract one JSON object from a raw LLM response."""
+    content = content.strip()
+
+    # Prefer JSON explicitly wrapped in a Markdown code fence.
+    fenced = re.search(
+        r"```(?:json)?\s*(\{.*?\})\s*```",
+        content,
+        re.DOTALL | re.IGNORECASE,
+    )
+    if fenced:
+        return fenced.group(1)
+
+    # Otherwise, extract the outermost JSON object.
+    start = content.find("{")
+    end = content.rfind("}")
+
+    if start == -1 or end <= start:
+        raise ValueError("LLM response contains no JSON object.")
+
+    return content[start:end + 1]
+
+
 # ============================================================
 # LLM
 # ============================================================
@@ -72,15 +95,25 @@ def ask_llm(prompt: str) -> dict:
 
         content = "\n".join(lines).strip()
 
+    
+    # --------------------------------------------------------
+    # Extract JSON from a response that may contain prose/fences
+    # --------------------------------------------------------
+
+    content = _extract_json_object(content)
+
     # --------------------------------------------------------
     # Parse JSON
     # --------------------------------------------------------
 
     try:
-
         return json.loads(content)
 
     except json.JSONDecodeError:
+        # Continue into the existing Windows-path escaping
+        # fallback below.
+        pass
+
 
         # ----------------------------------------------------
         # Repair common invalid Windows-path escaping
@@ -1617,9 +1650,14 @@ the authoritative implementation target.
                 implementation_source,
             )
 
-            print(
-                "Target validation and conservative source-evidence checks completed."
-            )
+            for item in diagnosis.get("diagnoses", []):
+                print(
+                    f"[SOURCE-EVIDENCE] "
+                    f"test={item.get('test')} "
+                    f"status={item.get('review_status')} "
+                    f"reason={item.get('review_reason', 'No reason recorded')} "
+                    f"recommended_fix={item.get('recommended_fix', 'Missing')!r}"
+                )
 
             # ------------------------------------------------
             # Display diagnoses
