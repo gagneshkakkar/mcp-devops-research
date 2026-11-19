@@ -821,6 +821,18 @@ def apply_source_evidence_gate(
             recommended_fix = str(item.get("recommended_fix", "")).lower()
 
             arithmetic_contracts = {
+                "add": {
+                    "doc_terms": ("sum", "addition", "add"),
+                    "expected_operator": ast.Add,
+                    "wrong_operators": (ast.Sub, ast.Mult, ast.Div),
+                    "fix_terms": ("a + b",),
+                },
+                "subtract": {
+                    "doc_terms": ("difference", "subtract", "subtraction"),
+                    "expected_operator": ast.Sub,
+                    "wrong_operators": (ast.Add, ast.Mult, ast.Div),
+                    "fix_terms": ("a - b",),
+                },
                 "multiply": {
                     "doc_terms": ("product",),
                     "expected_operator": ast.Mult,
